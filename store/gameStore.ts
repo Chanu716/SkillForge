@@ -36,6 +36,7 @@ export interface Project {
   title: string;
   description: string;
   levels: ProjectLevel[];
+  currentPhase?: 'ANALYSIS' | 'DESIGN' | 'IMPLEMENTATION' | 'OPTIMIZATION' | 'VALIDATION' | 'COMPLETED'; // Optional for backward compatibility, default to ANALYSIS
   isUnlocked: boolean; // Generally true now, levels are locked
 }
 
@@ -57,6 +58,7 @@ interface GameState {
   setMode: (mode: GameMode) => void;
   completeTopic: (subjectId: SubjectType, topicId: string, score: number) => void;
   unlockProjectLevel: (projectId: string, levelId: string) => void;
+  updateProjectPhase: (projectId: string, phase: string) => void;
   addXP: (amount: number) => void;
 }
 
@@ -79,6 +81,10 @@ export const useGameStore = create<GameState>()(
             { id: 'apt-prob', title: 'Probability', description: 'Risk Assessment', isUnlocked: true, isCompleted: false, moduleId: 'apt-prob-1' },
             { id: 'apt-clocks', title: 'Clocks & Calendars', description: 'Temporal Logic', isUnlocked: true, isCompleted: false, moduleId: 'apt-clocks-1' },
             { id: 'apt-blood', title: 'Blood Relations', description: 'Lineage Mapping', isUnlocked: true, isCompleted: false, moduleId: 'apt-blood-1' },
+            { id: 'apt-seat', title: 'Seating Arrangement', description: 'Spatial Organization', isUnlocked: true, isCompleted: false, moduleId: 'apt-seat-1' },
+            { id: 'apt-code', title: 'Coding-Decoding', description: 'Pattern Decryption', isUnlocked: true, isCompleted: false, moduleId: 'apt-code-1' },
+            { id: 'apt-syl', title: 'Syllogisms', description: 'Deductive Logic', isUnlocked: true, isCompleted: false, moduleId: 'apt-syl-1' },
+            { id: 'apt-puzz', title: 'Logic Puzzles', description: 'Complex Reasoning', isUnlocked: true, isCompleted: false, moduleId: 'apt-puzz-1' },
           ]
         },
         {
@@ -115,6 +121,7 @@ export const useGameStore = create<GameState>()(
           title: 'Blog Database Architecture',
           description: 'Design a scalable schema for a high-traffic content platform.',
           isUnlocked: true,
+          currentPhase: 'ANALYSIS',
           levels: [
             { id: 'lvl-1', title: 'Schema Design', description: 'Draft the ER Diagram', requiredTopicIds: ['dbms-er'], isLocked: true, isCompleted: false },
             { id: 'lvl-2', title: 'Normalization', description: 'Optimize to 3NF', requiredTopicIds: ['dbms-norm'], isLocked: true, isCompleted: false },
@@ -126,6 +133,7 @@ export const useGameStore = create<GameState>()(
           title: 'Analytics Dashboard',
           description: 'Build a responsive frontend for data visualization.',
           isUnlocked: true,
+          currentPhase: 'ANALYSIS',
           levels: [
             { id: 'lvl-1', title: 'Layout Structures', description: 'Grid & Flexbox', requiredTopicIds: [], isLocked: false, isCompleted: false }, // Open
             { id: 'lvl-2', title: 'Data Binding', description: 'State & Props', requiredTopicIds: ['apt-logic'], isLocked: true, isCompleted: false },
@@ -135,6 +143,14 @@ export const useGameStore = create<GameState>()(
 
       setUsername: (name) => set({ username: name }),
       setMode: (mode) => set({ currentMode: mode }),
+
+      updateProjectPhase: (projectId, phase) => {
+        set((state) => ({
+          projects: state.projects.map(p =>
+            p.id === projectId ? { ...p, currentPhase: phase as any } : p
+          )
+        }));
+      },
 
       addXP: (amount) => {
         const currentXP = get().xp;

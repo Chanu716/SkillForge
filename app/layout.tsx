@@ -18,9 +18,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={clsx(inter.variable, outfit.variable, "font-sans antialiased bg-background text-foreground overflow-hidden h-screen w-screen selection:bg-primary selection:text-white")}>
-                <div className="absolute inset-0 bg-grid-pattern pointer-events-none z-[-1]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none z-[-1]" />
+            <body className={clsx(inter.variable, outfit.variable, "font-sans antialiased bg-background text-foreground min-h-screen selection:bg-primary selection:text-white")}>
+                <div className="fixed inset-0 bg-grid-pattern pointer-events-none z-[-1]" />
+                <div className="fixed inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none z-[-1]" />
                 {children}
             </body>
         </html>

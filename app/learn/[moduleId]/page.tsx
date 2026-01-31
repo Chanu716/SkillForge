@@ -51,11 +51,15 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
 
             <main className="flex-1 flex items-center justify-center">
                 {topic.moduleId?.includes('apt-logic') && <AptitudeBridge onComplete={handleComplete} />}
+                {topic.moduleId?.includes('apt-seat') && <AptitudeBridge onComplete={handleComplete} category="SEATING" />}
+                {topic.moduleId?.includes('apt-code') && <AptitudeBridge onComplete={handleComplete} category="CODING" />}
+                {topic.moduleId?.includes('apt-syl') && <AptitudeBridge onComplete={handleComplete} category="SYLLOGISM" />}
+                {topic.moduleId?.includes('apt-puzz') && <AptitudeBridge onComplete={handleComplete} category="PUZZLE" />}
                 {topic.moduleId?.includes('apt-time') && <TimeWorkSimulator onComplete={handleComplete} />}
                 {topic.moduleId?.includes('apt-prob') && <ProbabilitySimulator onComplete={handleComplete} />}
                 {topic.moduleId?.includes('apt-clocks') && <ClockCalendarSimulator onComplete={handleComplete} />}
                 {topic.moduleId?.includes('apt-blood') && <BloodRelationSimulator onComplete={handleComplete} />}
-                
+
                 {topic.moduleId?.startsWith('dbms-') && (() => {
                     const dbmsTypeMap: Record<string, 'SCHEMA' | 'ER' | 'SQL' | 'JOIN' | 'NORM' | 'INDEX'> = {
                         'dbms-rel': 'SCHEMA',
@@ -68,7 +72,7 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
                     const type = Object.keys(dbmsTypeMap).find(key => topic.moduleId?.includes(key));
                     return <DBMSSimulator forcedType={type ? dbmsTypeMap[type] : undefined} onComplete={handleComplete} />;
                 })()}
-                
+
                 {topic.moduleId?.startsWith('os-') && (() => {
                     const osTypeMap: Record<string, 'PROC' | 'SCHED' | 'DEAD' | 'FILES'> = {
                         'os-proc': 'PROC',
@@ -79,13 +83,13 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
                     const type = Object.keys(osTypeMap).find(key => topic.moduleId?.includes(key));
                     return <OSSimulator forcedType={type ? osTypeMap[type] : undefined} onComplete={handleComplete} />;
                 })()}
-                
+
                 {/* Use Generic Simulator for other unlocked modules */}
                 {!topic.moduleId?.includes('apt-') && !topic.moduleId?.includes('dbms-') && !topic.moduleId?.includes('os-') && (
-                    <GenericSimulator 
-                        topicId={topic.id} 
-                        topicTitle={topic.title} 
-                        onComplete={handleComplete} 
+                    <GenericSimulator
+                        topicId={topic.id}
+                        topicTitle={topic.title}
+                        onComplete={handleComplete}
                     />
                 )}
             </main>

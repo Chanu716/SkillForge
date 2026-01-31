@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Trophy, ArrowRight, Zap, Shield, Flame, Target, Share2, Disc, Layers, Info, XCircle, Brain } from "lucide-react";
+import Image from "next/image";
 
 type Difficulty = "EASY" | "MEDIUM" | "HARD" | null;
 
@@ -22,7 +23,7 @@ interface Level {
 
 const GENERATE_LEVELS = (diff: Difficulty): Level[] => {
     if (!diff) return [];
-    
+
     return Array.from({ length: 15 }, (_, i) => {
         const id = i + 1;
         const seed = i + 1;
@@ -75,7 +76,7 @@ const GENERATE_LEVELS = (diff: Difficulty): Level[] => {
                     question: `Roll 2 dice. Chance the total sum equals ${sum}?`,
                     bits: [],
                     correctAnswer: `${ways}/36`,
-                    options: [`${ways}/36`, `${ways+1}/36`, `1/6`, `1/12`].sort(() => Math.random() - 0.5),
+                    options: [`${ways}/36`, `${ways + 1}/36`, `1/6`, `1/12`].sort(() => Math.random() - 0.5),
                     explanation: `Rolling 2 dice has 36 outcomes. There are ${ways} ways to get a sum of ${sum}.`
                 };
             }
@@ -111,6 +112,68 @@ const GENERATE_LEVELS = (diff: Difficulty): Level[] => {
             explanation: isFace ? "There are 4 Jacks, 4 Queens, and 4 Kings = 12 total face cards." : "There are 4 suits, so 13 cards are Hearts."
         };
     });
+};
+
+const CardShuffleDeck = () => {
+    const [order, setOrder] = useState([0, 1, 2, 3, 4]);
+    const [isDealt, setIsDealt] = useState(true);
+
+    useMemo(() => {
+        const interval = setInterval(() => {
+            // 1. Gather cards (Undeal)
+            setIsDealt(false);
+
+            // 2. Wait for gather -> Shuffle -> Deal
+            setTimeout(() => {
+                setOrder(prev => [...prev].sort(() => Math.random() - 0.5));
+                setIsDealt(true);
+            }, 800);
+
+        }, 4000); // Loop every 4 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="relative w-full h-full flex items-center justify-center">
+            <AnimatePresence>
+                {order.map((cardIndex, visualIndex) => (
+                    <motion.div
+                        key={`card-${cardIndex}`}
+                        layout
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{
+                            scale: 1,
+                            opacity: 1,
+                            x: isDealt ? (visualIndex - 2) * 60 : 0,
+                            y: isDealt ? Math.abs(visualIndex - 2) * 10 : 0,
+                            rotate: isDealt ? (visualIndex - 2) * 10 : Math.random() * 10 - 5,
+                            zIndex: isDealt ? visualIndex : 0,
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 200,
+                            damping: 20,
+                            mass: 1,
+                            delay: isDealt ? visualIndex * 0.1 : 0 // Stagger deal, sync gather
+                        }}
+                        className="w-32 h-48 rounded-xl shadow-2xl absolute bg-slate-50 overflow-hidden border border-slate-200"
+                        style={{
+                            boxShadow: "0 10px 30px -5px rgba(0,0,0,0.3)"
+                        }}
+                    >
+                        <Image
+                            src={cardIndex % 2 === 0 ? "/cards/ace_spades.png" : "/cards/queen_hearts.png"}
+                            alt="Playing Card"
+                            fill
+                            className="object-contain p-2"
+                        />
+                        {/* Card Back for polish (simulated by border/bg if needed, but keeping simple for now) */}
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+        </div>
+    );
 };
 
 export default function ProbabilitySimulator({ onComplete }: { onComplete: (score: number) => void }) {
@@ -197,7 +260,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                 <Button variant="ghost" onClick={() => setDifficulty(null)} className="text-[10px] font-mono opacity-40">Abort</Button>
             </div>
 
-            <motion.div 
+            <motion.div
                 key={currentIdx + (feedback === "ERROR" ? "-err" : "")}
                 initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
                 className="bg-black/20 border-2 border-white/10 rounded-[50px] p-16 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
@@ -225,21 +288,21 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary/20 border border-primary/40 rounded-full text-[10px] font-mono text-primary uppercase tracking-widest font-black">
                                     {level.visualType || 'BIT'} CHAMBER
                                 </div>
-                                
+
                                 {(!level.visualType || level.visualType === 'BITS') && (
                                     <div className="flex gap-4 flex-wrap justify-center">
                                         {level.bits.map((bit, idx) => (
                                             <div key={idx} className="flex gap-2">
                                                 {Array.from({ length: bit.count }).map((_, bIdx) => (
-                                                    <motion.div 
+                                                    <motion.div
                                                         key={bIdx}
                                                         initial={{ scale: 0, rotate: -45 }} animate={{ scale: 1, rotate: 0 }}
                                                         transition={{ type: "spring", stiffness: 200, delay: bIdx * 0.05 }}
                                                         className={cn(
                                                             "w-12 h-12 rounded-full border-4 shadow-xl",
-                                                            bit.type === 'GREEN' ? "bg-green-500/20 border-green-500 shadow-green-500/20" : 
-                                                            bit.type === 'RED' ? "bg-red-500/20 border-red-500 shadow-red-500/20" : 
-                                                            "bg-blue-500/20 border-blue-500 shadow-blue-500/20"
+                                                            bit.type === 'GREEN' ? "bg-green-500/20 border-green-500 shadow-green-500/20" :
+                                                                bit.type === 'RED' ? "bg-red-500/20 border-red-500 shadow-red-500/20" :
+                                                                    "bg-blue-500/20 border-blue-500 shadow-blue-500/20"
                                                         )}
                                                     />
                                                 ))}
@@ -251,7 +314,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                                 {level.visualType === 'DICE' && (
                                     <div className="flex gap-12">
                                         {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
-                                            <motion.div 
+                                            <motion.div
                                                 key={idx}
                                                 animate={{ rotate: [0, 90, 180, 270, 360], y: [0, -20, 0] }}
                                                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -266,7 +329,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                                 {level.visualType === 'COINS' && (
                                     <div className="flex gap-12">
                                         {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
-                                            <motion.div 
+                                            <motion.div
                                                 key={idx}
                                                 animate={{ rotateY: [0, 180, 360] }}
                                                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -279,22 +342,12 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                                 )}
 
                                 {level.visualType === 'CARDS' && (
-                                    <div className="flex gap-4 relative">
-                                        {Array.from({ length: 5 }).map((_, idx) => (
-                                            <motion.div 
-                                                key={idx}
-                                                initial={{ x: idx * 10, y: idx * 5 }}
-                                                animate={{ x: idx * 20, rotate: idx * 5 - 10 }}
-                                                className="w-24 h-36 bg-white/10 border-2 border-white/20 rounded-xl flex items-center justify-center text-4xl shadow-xl backdrop-blur-md"
-                                                style={{ zIndex: 5 - idx }}
-                                            >
-                                                {idx === 0 ? "🃏" : "🎴"}
-                                            </motion.div>
-                                        ))}
+                                    <div className="flex gap-4 relative pl-8 min-h-[220px]">
+                                        <CardShuffleDeck />
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div className="text-center max-w-3xl">
                                 <h3 className="text-4xl font-black text-white leading-tight mb-8 tracking-tight">{level.question}</h3>
                                 <div className="flex gap-6 justify-center">
@@ -315,7 +368,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                                     onClick={() => handleCheck(opt)}
                                     className={cn(
                                         "px-14 py-10 rounded-[40px] border-4 transition-all font-mono text-4xl font-black",
-                                        selected === opt 
+                                        selected === opt
                                             ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_50px_rgba(34,197,94,0.5)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_50px_rgba(239,68,68,0.5)]")
                                             : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:text-primary shadow-lg"
                                     )}
@@ -327,7 +380,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                     </div>
                 )}
             </motion.div>
-            
+
             <AnimatePresence>
                 {feedback === "SUCCESS" && (
                     <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="flex flex-col items-center gap-6">
