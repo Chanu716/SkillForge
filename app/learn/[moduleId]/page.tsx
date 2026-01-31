@@ -6,6 +6,14 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AptitudeBridge from "@/components/simulation/AptitudeBridge";
 import NormalizationBuilder from "@/components/simulation/NormalizationBuilder";
+import PatternRecognition from "@/components/simulation/PatternRecognition";
+import TimeWorkSimulator from "@/components/simulation/TimeWorkSimulator";
+import ProbabilitySimulator from "@/components/simulation/ProbabilitySimulator";
+import ClockCalendarSimulator from "@/components/simulation/ClockCalendarSimulator";
+import BloodRelationSimulator from "@/components/simulation/BloodRelationSimulator";
+import DBMSSimulator from "@/components/simulation/DBMSSimulator";
+import OSSimulator from "@/components/simulation/OSSimulator";
+import GenericSimulator from "@/components/simulation/GenericSimulator";
 import { use } from "react";
 
 export default function ModulePage({ params }: { params: Promise<{ moduleId: string }> }) {
@@ -23,11 +31,8 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
     }
 
     const handleComplete = (score: number) => {
-        // Determine subjectId from the flattened search or store structure
-        // Since we flattened it above, we have subjectId
         completeTopic(topic.subjectId, topic.id, score);
         setTimeout(() => {
-            // Go back to the subject page instead of dashboard
             router.push(`/subject/${topic.subjectId}`);
         }, 1500);
     };
@@ -45,20 +50,43 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
             </header>
 
             <main className="flex-1 flex items-center justify-center">
-                {topic.moduleId?.includes('apt-logic') && (
-                    <AptitudeBridge onComplete={handleComplete} />
-                )}
-                {topic.moduleId?.includes('dbms-norm') && (
-                    <NormalizationBuilder onComplete={handleComplete} />
-                )}
-                {/* Fallback */}
-                {!topic.moduleId?.includes('apt-logic') && !topic.moduleId?.includes('dbms-norm') && (
-                    <div className="text-center p-12 border border-dashed border-white/10 rounded-xl">
-                        <p className="text-muted-foreground">Simulation for {topic.title} under construction.</p>
-                        <Button onClick={() => handleComplete(100)} variant="secondary" className="mt-4">
-                            Debug: Auto Complete
-                        </Button>
-                    </div>
+                {topic.moduleId?.includes('apt-logic') && <AptitudeBridge onComplete={handleComplete} />}
+                {topic.moduleId?.includes('apt-time') && <TimeWorkSimulator onComplete={handleComplete} />}
+                {topic.moduleId?.includes('apt-prob') && <ProbabilitySimulator onComplete={handleComplete} />}
+                {topic.moduleId?.includes('apt-clocks') && <ClockCalendarSimulator onComplete={handleComplete} />}
+                {topic.moduleId?.includes('apt-blood') && <BloodRelationSimulator onComplete={handleComplete} />}
+                
+                {topic.moduleId?.startsWith('dbms-') && (() => {
+                    const dbmsTypeMap: Record<string, 'SCHEMA' | 'ER' | 'SQL' | 'JOIN' | 'NORM' | 'INDEX'> = {
+                        'dbms-rel': 'SCHEMA',
+                        'dbms-er': 'ER',
+                        'dbms-norm': 'NORM',
+                        'dbms-sql': 'SQL',
+                        'dbms-join': 'JOIN',
+                        'dbms-idx': 'INDEX'
+                    };
+                    const type = Object.keys(dbmsTypeMap).find(key => topic.moduleId?.includes(key));
+                    return <DBMSSimulator forcedType={type ? dbmsTypeMap[type] : undefined} onComplete={handleComplete} />;
+                })()}
+                
+                {topic.moduleId?.startsWith('os-') && (() => {
+                    const osTypeMap: Record<string, 'PROC' | 'SCHED' | 'DEAD' | 'FILES'> = {
+                        'os-proc': 'PROC',
+                        'os-sched': 'SCHED',
+                        'os-dead': 'DEAD',
+                        'os-files': 'FILES'
+                    };
+                    const type = Object.keys(osTypeMap).find(key => topic.moduleId?.includes(key));
+                    return <OSSimulator forcedType={type ? osTypeMap[type] : undefined} onComplete={handleComplete} />;
+                })()}
+                
+                {/* Use Generic Simulator for other unlocked modules */}
+                {!topic.moduleId?.includes('apt-') && !topic.moduleId?.includes('dbms-') && !topic.moduleId?.includes('os-') && (
+                    <GenericSimulator 
+                        topicId={topic.id} 
+                        topicTitle={topic.title} 
+                        onComplete={handleComplete} 
+                    />
                 )}
             </main>
         </div>
