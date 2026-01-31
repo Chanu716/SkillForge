@@ -76,9 +76,9 @@ export const useGameStore = create<GameState>()(
           progress: 0,
           topics: [
             { id: 'apt-logic', title: 'Logical Reasoning', description: 'The Bridge Pattern', isUnlocked: true, isCompleted: false, moduleId: 'apt-logic-1' },
-            { id: 'apt-time', title: 'Time & Work', description: 'Efficiency Optimization', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'apt-prob', title: 'Probability', description: 'Risk Assessment', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'apt-pattern', title: 'Pattern Recognition', description: 'Algorithmic Sight', isUnlocked: false, isCompleted: false, moduleId: null },
+            { id: 'apt-prob', title: 'Probability', description: 'Risk Assessment', isUnlocked: true, isCompleted: false, moduleId: 'apt-prob-1' },
+            { id: 'apt-clocks', title: 'Clocks & Calendars', description: 'Temporal Logic', isUnlocked: true, isCompleted: false, moduleId: 'apt-clocks-1' },
+            { id: 'apt-blood', title: 'Blood Relations', description: 'Lineage Mapping', isUnlocked: true, isCompleted: false, moduleId: 'apt-blood-1' },
           ]
         },
         {
@@ -87,12 +87,12 @@ export const useGameStore = create<GameState>()(
           description: 'Architecting persistent memory.',
           progress: 0,
           topics: [
-            { id: 'dbms-rel', title: 'Relational Model', description: 'Tables and Tuples', isUnlocked: true, isCompleted: false, moduleId: null },
-            { id: 'dbms-er', title: 'ER Diagrams', description: 'Visualizing Entities', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'dbms-norm', title: 'Normalization', description: 'Removing Redundancy', isUnlocked: false, isCompleted: false, moduleId: 'dbms-norm-1' }, // Linked to existing sim
-            { id: 'dbms-sql', title: 'SQL Basics', description: 'The Query Language', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'dbms-join', title: 'Advanced Joins', description: 'Connecting Data', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'dbms-idx', title: 'Indexing', description: 'Performance Optimization', isUnlocked: false, isCompleted: false, moduleId: null },
+            { id: 'dbms-rel', title: 'Relational Model', description: 'Tables and Tuples', isUnlocked: true, isCompleted: false, moduleId: 'dbms-rel-1' },
+            { id: 'dbms-er', title: 'ER Diagrams', description: 'Visualizing Entities', isUnlocked: true, isCompleted: false, moduleId: 'dbms-er-1' },
+            { id: 'dbms-norm', title: 'Normalization', description: 'Removing Redundancy', isUnlocked: true, isCompleted: false, moduleId: 'dbms-norm-1' },
+            { id: 'dbms-sql', title: 'SQL Basics', description: 'The Query Language', isUnlocked: true, isCompleted: false, moduleId: 'dbms-sql-1' },
+            { id: 'dbms-join', title: 'Advanced Joins', description: 'Connecting Data', isUnlocked: true, isCompleted: false, moduleId: 'dbms-join-1' },
+            { id: 'dbms-idx', title: 'Indexing', description: 'Performance Optimization', isUnlocked: true, isCompleted: false, moduleId: 'dbms-idx-1' },
           ]
         },
         {
@@ -101,10 +101,10 @@ export const useGameStore = create<GameState>()(
           description: 'The Ghost in the Machine.',
           progress: 0,
           topics: [
-            { id: 'os-proc', title: 'Process Management', description: 'Lifecycle of Code', isUnlocked: true, isCompleted: false, moduleId: null },
-            { id: 'os-sched', title: 'CPU Scheduling', description: 'The Conductor', isUnlocked: false, isCompleted: false, moduleId: 'os-sched-1' },
-            { id: 'os-mem', title: 'Memory Paging', description: 'Virtual Spaces', isUnlocked: false, isCompleted: false, moduleId: null },
-            { id: 'os-dead', title: 'Concurrency', description: 'Deadlocks & Mutex', isUnlocked: false, isCompleted: false, moduleId: null },
+            { id: 'os-proc', title: 'Process Management', description: 'Lifecycle of Code', isUnlocked: true, isCompleted: false, moduleId: 'os-proc-1' },
+            { id: 'os-sched', title: 'CPU Scheduling', description: 'The Conductor', isUnlocked: true, isCompleted: false, moduleId: 'os-sched-1' },
+            { id: 'os-dead', title: 'Deadlocks', description: 'Resource Contention', isUnlocked: true, isCompleted: false, moduleId: 'os-dead-1' },
+            { id: 'os-files', title: 'File Systems', description: 'Persistent Storage Hierarchy', isUnlocked: true, isCompleted: false, moduleId: 'os-files-1' },
           ]
         }
       ],
@@ -182,7 +182,7 @@ export const useGameStore = create<GameState>()(
       }
     }),
     {
-      name: 'skillforge-storage-v2', // Changed version to reset state
+      name: 'skillforge-storage-v5', // Reset to unlock all interactive modules
     }
   )
 );
