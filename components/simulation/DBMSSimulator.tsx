@@ -289,7 +289,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                 </Button>
             </div>
 
-            <div className="bg-black/20 border-2 border-white/10 rounded-[50px] p-4 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-md overflow-hidden">
+            <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-4 flex flex-col items-center justify-between relative backdrop-blur-md overflow-hidden shadow-2xl">
                 <AnimatePresence mode="wait">
                     {feedback === "ERROR" ? (
                         <motion.div 
@@ -297,14 +297,14 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
-                            className="flex flex-col items-center text-center p-4 max-w-2xl"
+                            className="flex flex-col items-center text-center p-4 max-w-2xl w-full"
                         >
-                            <XCircle className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
-                            <h2 className="text-3xl font-black text-red-500 mb-4 uppercase tracking-tighter italic">Integrity Violation</h2>
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-3xl p-4 mb-4 backdrop-blur-xl">
-                                <p className="text-lg text-white/90 font-medium italic">🧐 {level.explanation}</p>
+                            <XCircle className="w-16 h-16 text-red-500 mb-4 animate-pulse shadow-[0_0_40px_rgba(239,68,68,0.3)]" />
+                            <h2 className="text-2xl font-black text-red-500 mb-4 uppercase tracking-tight italic">Integrity Violation</h2>
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 mb-6 backdrop-blur-xl max-h-24 overflow-y-auto">
+                                <p className="text-base text-white/90 font-medium italic leading-snug">🧐 {level.explanation}</p>
                             </div>
-                            <Button onClick={nextLevel} size="xl" className="rounded-full px-16 h-20 text-xl bg-red-600 hover:bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]">Fix Stream</Button>
+                            <Button onClick={nextLevel} size="lg" className="rounded-full px-16 py-4 text-lg font-black bg-red-600 hover:bg-red-500 shadow-[0_10px_40px_rgba(239,68,68,0.4)] transition-all">Fix Stream →</Button>
                         </motion.div>
                     ) : (
                         <motion.div 
@@ -312,10 +312,10 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="w-full flex flex-col items-center gap-12"
+                            className="w-full flex flex-col items-center gap-6"
                         >
                             {/* Visual Engine Display */}
-                            <div className="relative w-full max-w-2xl aspect-video bg-black/40 rounded-[40px] border-4 border-white/5 flex items-center justify-center p-4">
+                            <div className="relative w-full max-w-2xl h-[180px] bg-black/40 rounded-[25px] border-2 border-white/10 flex items-center justify-center p-3 overflow-hidden shadow-inner">
                                 <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
                                     <Database className="w-64 h-64 text-primary" />
                                 </div>
@@ -422,17 +422,17 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                                 )}
                             </div>
 
-                            <div className="space-y-6 w-full max-w-2xl">
-                                <h3 className="text-2xl font-black text-white text-center leading-relaxed italic tracking-tight">{level.question}</h3>
-                                <div className="grid grid-cols-2 gap-6 pt-6">
+                            <div className="space-y-3 w-full max-w-2xl">
+                                <h3 className="text-lg font-black text-white text-center leading-tight italic tracking-tight px-2">{level.question}</h3>
+                                <div className="grid grid-cols-2 gap-3">
                                     {level.options.map((opt, i) => (
                                         <motion.button
                                             key={i}
-                                            whileHover={{ scale: 1.03, y: -5 }}
-                                            whileTap={{ scale: 0.97 }}
+                                            whileHover={{ scale: 1.05, y: -2 }}
+                                            whileTap={{ scale: 0.95 }}
                                             onClick={() => handleCheck(opt)}
                                             className={cn(
-                                                "p-4 rounded-[35px] border-2 transition-all font-black text-lg uppercase tracking-tighter italic min-h-[80px]",
+                                                "p-3 rounded-[20px] border-2 transition-all font-bold text-sm uppercase tracking-tight italic min-h-[60px] flex items-center justify-center",
                                                 selected === opt 
                                                     ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_40px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]")
                                                     : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:bg-primary/5"
@@ -452,25 +452,25 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
             <AnimatePresence>
                 {feedback === "SUCCESS" && (
                     <motion.div 
-                        initial={{ opacity: 0, y: 50 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -50 }}
-                        className="flex flex-col items-center gap-8 py-10"
+                        initial={{ opacity: 0, scale: 0.8 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="flex flex-col items-center gap-4 py-4"
                     >
                         <motion.div 
-                            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }} 
+                            animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }} 
                             transition={{ repeat: Infinity, duration: 2 }}
-                            className="bg-green-500/20 p-8 rounded-full border-4 border-green-500 shadow-[0_0_100px_rgba(34,197,94,0.4)]"
+                            className="bg-green-500/20 p-4 rounded-full border-3 border-green-500 shadow-[0_0_60px_rgba(34,197,94,0.4)]"
                         >
-                            <CheckCircle2 className="w-24 h-24 text-green-500" />
+                            <CheckCircle2 className="w-12 h-12 text-green-500" />
                         </motion.div>
-                        <p className="text-4xl font-black text-green-500 uppercase tracking-[0.5em] italic animate-pulse">
+                        <p className="text-2xl font-black text-green-500 uppercase tracking-wide italic animate-pulse">
                             Query Validated
                         </p>
                         <Button 
                             onClick={nextLevel} 
-                            size="xl" 
-                            className="bg-primary hover:bg-primary/80 text-white px-32 py-12 rounded-full text-3xl font-black shadow-[0_30px_80px_rgba(var(--primary),0.4)] hover:shadow-primary/60 transition-all uppercase italic tracking-tighter"
+                            size="lg" 
+                            className="bg-primary hover:bg-primary/80 text-white px-20 py-6 rounded-full text-xl font-black shadow-[0_15px_50px_rgba(var(--primary),0.4)] hover:shadow-primary/60 transition-all uppercase italic tracking-tight"
                         >
                             Next Thread 🚀
                         </Button>

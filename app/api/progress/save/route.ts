@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const progress = await req.json();
-    const userId = session.user.id as string;
+    const userId = (session.user as any).id || session.user.email;
     const result = await saveProgress(userId, progress);
     if (result.success) {
       return NextResponse.json({ ok: true });
