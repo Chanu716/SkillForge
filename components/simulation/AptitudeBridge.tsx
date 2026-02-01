@@ -104,7 +104,7 @@ const GENERATE_LEVELS_BY_DIFF = (diff: Difficulty): Level[] => {
     });
 };
 
-export default function AptitudeBridge({ onComplete }: { onComplete: (score: number) => void }) {
+export default function AptitudeBridge({ onComplete, category }: { onComplete: (score: number) => void; category?: string }) {
     const [difficulty, setDifficulty] = useState<Difficulty>(null);
     const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
