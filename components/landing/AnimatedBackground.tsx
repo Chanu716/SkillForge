@@ -25,6 +25,7 @@ export default function AnimatedBackground({ imageSrc = "/backgrounds/bg.png" }:
                     className="object-cover brightness-50" // Added brightness reduction
                     priority
                     quality={90}
+                    unoptimized
                 />
             </motion.div>
 
