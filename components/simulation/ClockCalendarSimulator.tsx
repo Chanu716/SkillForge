@@ -169,7 +169,7 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
     if (isFinished) return <div className="text-center p-20 text-white">SYNC COMPLETE</div>;
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
+        <div className="w-full max-w-3xl mx-auto flex flex-col gap-4">
             <div className="flex justify-between items-start px-4 mb-4">
                 <div className="flex items-center gap-6">
                     <div className="w-16 h-16 rounded-2xl border-2 border-primary/30 bg-primary/10 flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary),0.2)]">
@@ -208,7 +208,7 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                     ABORT_TASK
                 </Button>
             </div>
-            <div className="bg-black/20 border-2 border-white/10 rounded-[50px] p-16 min-h-[500px] flex flex-col items-center justify-center relative backdrop-blur-sm">
+            <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-3 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-sm">
                 {feedback === "ERROR" ? (
                     <div className="flex flex-col items-center text-center p-10">
                         <h2 className="text-4xl font-black text-red-500 mb-6 uppercase tracking-tighter">Temporal Desync ❌</h2>
@@ -218,14 +218,14 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                         <Button onClick={nextLevel} className="rounded-full px-12">Next Sequence</Button>
                     </div>
                 ) : (
-                    <div className="w-full text-center space-y-12">
+                    <div className="w-full text-center space-y-6">
                         <div className="inline-flex items-center gap-4 px-6 py-2 bg-primary/20 rounded-full border border-primary/40 text-primary font-mono text-xs uppercase tracking-widest">
                             {level.type === 'CLOCK' ? <Clock className="w-4 h-4" /> : <Calendar className="w-4 h-4" />}
                             {level.type} PROTOCOL active
                         </div>
 
                         {/* Animated Visual Area */}
-                        <div className="flex justify-center py-6">
+                        <div className="flex justify-center py-2">
                             {level.type === 'CLOCK' ? (
                                 <motion.div 
                                     initial={{ rotate: -90, opacity: 0 }}
@@ -287,8 +287,8 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                             )}
                         </div>
 
-                        <h3 className="text-4xl font-bold text-white max-w-3xl mx-auto leading-tight">{level.question}</h3>
-                        <div className="grid grid-cols-2 gap-6 pt-6">
+                        <h3 className="text-2xl font-bold text-white max-w-2xl mx-auto leading-tight">{level.question}</h3>
+                        <div className="grid grid-cols-2 gap-3 pt-3">
                             {level.options.map((opt, i) => (
                                 <motion.button
                                     key={i} onClick={() => handleCheck(opt)}

@@ -75,7 +75,7 @@ export default function NormalizationBuilder({ onComplete }: { onComplete: (scor
 
             <div className="flex gap-8 items-start justify-center">
                 {/* Table 1 */}
-                <div className="flex-1 bg-card/10 border border-white/10 rounded-xl p-4 min-h-[300px]">
+                <div className="flex-1 bg-card/10 border border-white/10 rounded-xl p-6 min-h-[320px]">
                     <div className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider">Primary Relation</div>
                     <div className="flex gap-2 bg-black/20 p-2 rounded overflow-x-auto">
                         {columns.map(col => (

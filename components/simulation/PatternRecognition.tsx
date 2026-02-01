@@ -201,7 +201,7 @@ export default function PatternRecognition({ onComplete }: { onComplete: (score:
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-6 bg-black/40 rounded-xl border border-white/10 backdrop-blur-md relative overflow-hidden">
+        <div className="w-full max-w-2xl mx-auto p-2 bg-black/40 rounded-xl border border-white/10 backdrop-blur-md relative overflow-hidden">
             {/* HUD Header */}
             <div className="flex justify-between items-center mb-12 border-b border-white/5 pb-4">
                 <div>
@@ -230,7 +230,7 @@ export default function PatternRecognition({ onComplete }: { onComplete: (score:
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="min-h-[400px] flex flex-col items-center justify-center"
+                    className="min-h-[180px] flex flex-col items-center justify-center"
                 >
                     <div className="text-center mb-8">
                         <h3 className="text-2xl font-bold text-white uppercase tracking-tighter mb-2">

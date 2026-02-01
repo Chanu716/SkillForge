@@ -11,7 +11,7 @@ export default function Home() {
 
     const handleStart = () => {
         setMode("LEARNING_HOME");
-        router.push("/dashboard");
+        router.push("/auth");
     };
 
     return (

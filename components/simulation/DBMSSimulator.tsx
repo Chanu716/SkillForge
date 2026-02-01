@@ -289,7 +289,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                 </Button>
             </div>
 
-            <div className="bg-black/20 border-2 border-white/10 rounded-[50px] p-12 min-h-[550px] flex flex-col items-center justify-center relative backdrop-blur-md overflow-hidden">
+            <div className="bg-black/20 border-2 border-white/10 rounded-[50px] p-4 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-md overflow-hidden">
                 <AnimatePresence mode="wait">
                     {feedback === "ERROR" ? (
                         <motion.div 
@@ -297,12 +297,12 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
-                            className="flex flex-col items-center text-center p-10 max-w-2xl"
+                            className="flex flex-col items-center text-center p-4 max-w-2xl"
                         >
-                            <XCircle className="w-24 h-24 text-red-500 mb-8 animate-pulse" />
-                            <h2 className="text-5xl font-black text-red-500 mb-6 uppercase tracking-tighter italic">Integrity Violation</h2>
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-3xl p-8 mb-8 backdrop-blur-xl">
-                                <p className="text-2xl text-white/90 font-medium italic">🧐 {level.explanation}</p>
+                            <XCircle className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
+                            <h2 className="text-3xl font-black text-red-500 mb-4 uppercase tracking-tighter italic">Integrity Violation</h2>
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-3xl p-4 mb-4 backdrop-blur-xl">
+                                <p className="text-lg text-white/90 font-medium italic">🧐 {level.explanation}</p>
                             </div>
                             <Button onClick={nextLevel} size="xl" className="rounded-full px-16 h-20 text-xl bg-red-600 hover:bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]">Fix Stream</Button>
                         </motion.div>
@@ -315,7 +315,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                             className="w-full flex flex-col items-center gap-12"
                         >
                             {/* Visual Engine Display */}
-                            <div className="relative w-full max-w-2xl aspect-video bg-black/40 rounded-[40px] border-4 border-white/5 flex items-center justify-center p-8">
+                            <div className="relative w-full max-w-2xl aspect-video bg-black/40 rounded-[40px] border-4 border-white/5 flex items-center justify-center p-4">
                                 <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
                                     <Database className="w-64 h-64 text-primary" />
                                 </div>
@@ -327,7 +327,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                                                 key={idx}
                                                 whileHover={{ scale: 1.05 }}
                                                 className={cn(
-                                                    "p-6 rounded-2xl border-2 flex items-center gap-4 transition-all duration-300",
+                                                    "p-3 rounded-2xl border-2 flex items-center gap-4 transition-all duration-300",
                                                     col === "UserID" ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary),0.2)]" : "border-white/10 bg-white/5"
                                                 )}
                                             >
@@ -340,7 +340,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
 
                                 {level.type === 'ER' && (
                                     <div className="flex items-center gap-12 w-full justify-center">
-                                        <div className="p-8 rounded-3xl bg-primary/20 border-2 border-primary text-white font-black text-xl shadow-[0_0_30px_rgba(var(--primary),0.3)]">
+                                        <div className="p-4 rounded-3xl bg-primary/20 border-2 border-primary text-white font-black text-lg shadow-[0_0_30px_rgba(var(--primary),0.3)]">
                                             {level.visualData.nodes[0]}
                                         </div>
                                         <div className="flex flex-col items-center">
@@ -353,7 +353,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                                             </div>
                                             <span className="text-xs font-mono text-primary mt-2">{level.visualData.link}</span>
                                         </div>
-                                        <div className="p-8 rounded-3xl bg-white/10 border-2 border-white/20 text-white font-black text-xl">
+                                        <div className="p-4 rounded-3xl bg-white/10 border-2 border-white/20 text-white font-black text-lg">
                                             {level.visualData.nodes[1]}
                                         </div>
                                     </div>
@@ -361,7 +361,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
 
                                 {level.type === 'SQL' && (
                                     <div className="w-full flex flex-col gap-6">
-                                        <code className="p-8 bg-black/60 rounded-3xl border border-primary/30 text-primary font-mono text-xl block leading-relaxed">
+                                        <code className="p-4 bg-black/60 rounded-3xl border border-primary/30 text-primary font-mono text-lg block leading-relaxed">
                                             <span className="text-white/40 italic">-- Executing Thread --</span><br/>
                                             {level.visualData.query}
                                         </code>
@@ -423,7 +423,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                             </div>
 
                             <div className="space-y-6 w-full max-w-2xl">
-                                <h3 className="text-3xl font-black text-white text-center leading-relaxed italic tracking-tight">{level.question}</h3>
+                                <h3 className="text-2xl font-black text-white text-center leading-relaxed italic tracking-tight">{level.question}</h3>
                                 <div className="grid grid-cols-2 gap-6 pt-6">
                                     {level.options.map((opt, i) => (
                                         <motion.button
@@ -432,7 +432,7 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                                             whileTap={{ scale: 0.97 }}
                                             onClick={() => handleCheck(opt)}
                                             className={cn(
-                                                "p-8 rounded-[35px] border-2 transition-all font-black text-xl uppercase tracking-tighter italic min-h-[100px]", 
+                                                "p-4 rounded-[35px] border-2 transition-all font-black text-lg uppercase tracking-tighter italic min-h-[80px]",
                                                 selected === opt 
                                                     ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_40px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]")
                                                     : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:bg-primary/5"
@@ -480,4 +480,3 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
         </div>
     );
 }
-
