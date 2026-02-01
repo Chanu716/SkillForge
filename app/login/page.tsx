@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useGameStore } from "@/store/gameStore";
 import { cn } from "@/lib/utils";
+import { Lock } from "lucide-react";
 
 const hasGoogleOAuth = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
 const hasGitHubOAuth = process.env.NEXT_PUBLIC_GITHUB_ENABLED === "true";
@@ -16,10 +17,19 @@ const hasGitHubOAuth = process.env.NEXT_PUBLIC_GITHUB_ENABLED === "true";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { data: session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPasswordChange, setShowPasswordChange] = useState(false);
+    
+    // Password change states
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [passwordSaved, setPasswordSaved] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,6 +45,50 @@ export default function LoginPage() {
             router.push("/dashboard");
         } else {
             setError("Invalid credentials");
+        }
+    };
+
+    const handlePasswordChange = async () => {
+        setPasswordError('');
+        setPasswordSaved(false);
+
+        if (newPassword.length < 6) {
+            setPasswordError('New password must be at least 6 characters');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setPasswordError(data.error || 'Failed to change password');
+                return;
+            }
+
+            setPasswordSaved(true);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+            setTimeout(() => {
+                setPasswordSaved(false);
+                setShowPasswordChange(false);
+            }, 2000);
+        } catch (error) {
+            setPasswordError('An error occurred. Please try again.');
         }
     };
 
@@ -59,8 +113,74 @@ export default function LoginPage() {
                 transition={{ type: 'spring', duration: 0.7 }}
                 className={cn("w-full max-w-md bg-white/5 border border-white/10 rounded-2xl shadow-xl p-8 backdrop-blur-xl", loginTheme.card)}
             >
-                <h1 className="text-3xl font-black mb-6 text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">Operator Login</h1>
-                <form className="space-y-6" onSubmit={handleLogin}>
+                <h1 className="text-3xl font-black mb-6 text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)]">
+                    {session ? "Change Password" : "Operator Login"}
+                </h1>
+                
+                {/* Only show password change if user is already logged in */}
+                {session ? (
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-400 flex items-center gap-2">
+                                <Lock className="w-4 h-4" />
+                                Current Password
+                            </label>
+                            <Input
+                                type="password"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                className="bg-black/50 border-white/20 text-white"
+                                placeholder="Enter current password"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-400 flex items-center gap-2">
+                                <Lock className="w-4 h-4" />
+                                New Password
+                            </label>
+                            <Input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="bg-black/50 border-white/20 text-white"
+                                placeholder="Enter new password (min 6 characters)"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-400 flex items-center gap-2">
+                                <Lock className="w-4 h-4" />
+                                Confirm New Password
+                            </label>
+                            <Input
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="bg-black/50 border-white/20 text-white"
+                                placeholder="Confirm new password"
+                            />
+                        </div>
+                        {passwordError && (
+                            <div className="text-red-400 text-sm flex items-center gap-2 bg-red-950/20 border border-red-500/20 rounded-lg p-3">
+                                <span>⚠</span> {passwordError}
+                            </div>
+                        )}
+                        <Button 
+                            onClick={handlePasswordChange} 
+                            variant="cyber" 
+                            className="w-full"
+                            disabled={!currentPassword || !newPassword || !confirmPassword}
+                        >
+                            {passwordSaved ? "✓ Password Updated" : <><Lock className="w-4 h-4 mr-2" /> Change Password</>}
+                        </Button>
+                        <div className="mt-4 text-center">
+                            <Button variant="link" onClick={() => router.push('/dashboard')} className="text-muted-foreground hover:text-white">
+                                Back to Dashboard
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <form className="space-y-6" onSubmit={handleLogin}>
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Email</label>
                         <Input type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required />
@@ -87,6 +207,8 @@ export default function LoginPage() {
                         New here? Create an account
                     </Button>
                 </div>
+                    </>
+                )}
             </motion.div>
         </div>
     );

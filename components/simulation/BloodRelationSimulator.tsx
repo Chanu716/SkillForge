@@ -254,16 +254,29 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
                             </div>
                         </div>
 
-                        <h3 className="text-xl font-bold text-white max-w-2xl mx-auto leading-relaxed">{level.question}</h3>
-                        <div className="grid grid-cols-2 gap-2 pt-2 px-2">
+                        <motion.h3 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="text-xl font-bold text-white max-w-2xl mx-auto leading-relaxed px-4"
+                        >
+                            {level.question}
+                        </motion.h3>
+                        <div className="grid grid-cols-2 gap-3 pt-4 px-2">
                             {level.options.map((opt, i) => (
                                 <motion.button
-                                    key={i} onClick={() => handleCheck(opt)}
+                                    key={i} 
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.4 + i * 0.1, type: "spring" }}
+                                    whileHover={{ scale: 1.05, y: -3 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => handleCheck(opt)}
                                     className={cn(
-                                        "p-4 rounded-xl border-2 transition-all font-bold text-base", 
+                                        "p-5 rounded-2xl border-2 transition-all font-bold text-base shadow-lg", 
                                         selected === opt 
                                             ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]")
-                                            : "border-white/10 bg-white/5 text-white/80 hover:border-red-500/30"
+                                            : "border-white/10 bg-white/5 text-white/80 hover:border-red-500/40 hover:bg-red-500/5"
                                     )}
                                 >
                                     {opt}

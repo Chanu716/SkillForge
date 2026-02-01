@@ -15,6 +15,7 @@ import DBMSSimulator from "@/components/simulation/DBMSSimulator";
 import OSSimulator from "@/components/simulation/OSSimulator";
 import GenericSimulator from "@/components/simulation/GenericSimulator";
 import { use } from "react";
+import AnimatedBackground from "@/components/landing/AnimatedBackground";
 
 export default function ModulePage({ params }: { params: Promise<{ moduleId: string }> }) {
     const unwrappedParams = use(params);
@@ -30,6 +31,15 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
         return <div className="p-12 text-center text-white">Module Not Found</div>;
     }
 
+    const getBackgroundImage = (subjectId: string) => {
+        switch (subjectId) {
+            case 'APTITUDE': return '/backgrounds/Aptitude.png';
+            case 'DBMS': return '/backgrounds/DBMS.png';
+            case 'OS': return '/backgrounds/OS.png';
+            default: return '/backgrounds/bg.png';
+        }
+    };
+
     const handleComplete = (score: number) => {
         completeTopic(topic.subjectId, topic.id, score);
         setTimeout(() => {
@@ -38,7 +48,9 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
     };
 
     return (
-        <div className="min-h-screen p-8 flex flex-col">
+        <div className="min-h-screen p-8 flex flex-col relative overflow-hidden">
+            <AnimatedBackground imageSrc={getBackgroundImage(topic.subjectId)} />
+            <div className="relative z-10 flex flex-col h-full flex-grow">
             <header className="flex items-center gap-4 mb-8">
                 <Button variant="ghost" size="icon" onClick={() => router.push(`/subject/${topic.subjectId}`)}>
                     <ArrowLeft className="w-5 h-5" />
@@ -89,6 +101,7 @@ export default function ModulePage({ params }: { params: Promise<{ moduleId: str
                     />
                 )}
             </main>
+            </div>
         </div>
     );
 }

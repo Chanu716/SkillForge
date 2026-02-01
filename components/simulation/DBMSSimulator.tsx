@@ -211,24 +211,21 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
             <div className="w-full max-w-4xl mx-auto py-20 px-6">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
                     <Database className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
-                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter uppercase">Query Engine</h1>
-                    <p className="text-primary/60 font-mono tracking-widest uppercase italic">Master the architecture of persistent memory systems.</p>
+                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">DBMS NEURAL ENGINE</h1>
+                    <p className="text-primary/60 font-mono tracking-widest uppercase">Initialize database intelligence protocol.</p>
                 </motion.div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {["EASY", "MEDIUM", "HARD"].map((d, i) => (
                         <motion.button
                             key={d}
-                            whileHover={{ y: -10, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileHover={{ y: -10 }}
                             onClick={() => setDifficulty(d as Difficulty)}
-                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all flex flex-col items-center group relative overflow-hidden"
+                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all font-black text-2xl text-white"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                            {i === 0 ? <Zap className="w-12 h-12 mb-6 text-primary" /> : 
-                             i === 1 ? <GitBranch className="w-12 h-12 mb-6 text-primary" /> : 
-                             <Workflow className="w-12 h-12 mb-6 text-primary" />}
-                            <h3 className="text-2xl font-black text-white uppercase">{d}</h3>
-                            <p className="text-xs text-white/40 mt-2 font-mono">NODE_INIT_{d}</p>
+                            {d === "EASY" ? <Table className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             d === "MEDIUM" ? <Network className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             <Workflow className="w-12 h-12 mx-auto mb-6 text-primary" />}
+                            {d === "EASY" ? "NOVICE" : d === "MEDIUM" ? "EXPERT" : "MASTER"}
                         </motion.button>
                     ))}
                 </div>
@@ -280,13 +277,6 @@ export default function DBMSSimulator({ forcedType, onComplete }: { forcedType?:
                         </div>
                     </div>
                 </div>
-                <Button 
-                    variant="ghost" 
-                    onClick={() => setDifficulty(null)} 
-                    className="text-[10px] font-mono opacity-40 hover:opacity-100 mt-2 tracking-widest"
-                >
-                    ABORT_QUERY
-                </Button>
             </div>
 
             <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-4 flex flex-col items-center justify-between relative backdrop-blur-md overflow-hidden shadow-2xl">

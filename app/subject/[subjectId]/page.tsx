@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { use } from "react";
+import AnimatedBackground from "@/components/landing/AnimatedBackground";
 
 export default function SubjectPage({ params }: { params: Promise<{ subjectId: string }> }) {
     const unwrappedParams = use(params);
@@ -21,8 +22,19 @@ export default function SubjectPage({ params }: { params: Promise<{ subjectId: s
         return <div className="p-12 text-center text-red-400">Subject Protocol Not Found</div>;
     }
 
+    const getBackgroundImage = (subjectId: string) => {
+        switch (subjectId) {
+            case 'APTITUDE': return '/backgrounds/Aptitude.png';
+            case 'DBMS': return '/backgrounds/DBMS.png';
+            case 'OS': return '/backgrounds/OS.png';
+            default: return '/backgrounds/bg.png';
+        }
+    };
+
     return (
-        <div className="min-h-screen p-8 md:p-12">
+        <div className="min-h-screen p-8 md:p-12 relative overflow-hidden">
+            <AnimatedBackground imageSrc={getBackgroundImage(subject.id)} />
+            <div className="relative z-10">
             <header className="flex items-center gap-4 mb-12">
                 <Button variant="ghost" size="icon" onClick={() => router.push('/dashboard')}>
                     <ArrowLeft className="w-5 h-5" />
@@ -39,6 +51,7 @@ export default function SubjectPage({ params }: { params: Promise<{ subjectId: s
                 {subject.topics.map((topic, index) => (
                     <TopicCard key={topic.id} topic={topic} index={index} />
                 ))}
+            </div>
             </div>
         </div>
     );

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Trophy, ArrowRight, Zap, Shield, Flame, Target, Share2, Disc, Layers, Info, XCircle, Brain } from "lucide-react";
+import { Trophy, ArrowRight, Zap, Shield, Flame, Target, Share2, Disc, Layers, Info, XCircle, Brain, Network } from "lucide-react";
 import Image from "next/image";
 
 type Difficulty = "EASY" | "MEDIUM" | "HARD" | null;
@@ -213,22 +213,15 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                     <p className="text-primary/60 font-mono tracking-widest uppercase">Analyze neural bit variances and calculate probability vectors.</p>
                 </motion.div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[
-                        { id: "EASY", label: "NOVICE", icon: Zap, color: "text-cyan-400", bg: "bg-cyan-400/10" },
-                        { id: "MEDIUM", label: "EXPERT", icon: Shield, color: "text-purple-400", bg: "bg-purple-400/10" },
-                        { id: "HARD", label: "MASTER", icon: Flame, color: "text-red-400", bg: "bg-red-400/10" }
-                    ].map((d, i) => (
+                    {["EASY", "MEDIUM", "HARD"].map((d, i) => (
                         <motion.button
-                            key={d.id}
-                            initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
-                            onClick={() => setDifficulty(d.id as Difficulty)}
-                            className={cn("p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all", d.bg)}
+                            key={d}
+                            whileHover={{ y: -10 }}
+                            onClick={() => setDifficulty(d as Difficulty)}
+                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all font-black text-2xl text-white"
                         >
-                            <d.icon className={cn("w-12 h-12 mx-auto mb-6", d.color)} />
-                            <h3 className="text-2xl font-black text-white">{d.label}</h3>
-                            <div className="mt-4 flex justify-center gap-1">
-                                {Array.from({ length: i + 1 }).map((_, j) => <div key={j} className="h-1 w-4 bg-primary/40 rounded-full" />)}
-                            </div>
+                            <Network className="w-12 h-12 mx-auto mb-6 text-primary" />
+                            {d === "EASY" ? "NOVICE" : d === "MEDIUM" ? "EXPERT" : "MASTER"}
                         </motion.button>
                     ))}
                 </div>
@@ -238,157 +231,213 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
 
     if (isFinished) {
         return (
-            <div className="text-center p-20 bg-black/40 rounded-[40px] border-2 border-primary/20 backdrop-blur-2xl">
-                <Trophy className="w-24 h-24 text-yellow-400 mx-auto mb-8" />
-                <h2 className="text-5xl font-bold text-white mb-4">CALCULATION COMPLETE</h2>
-                <Button onClick={() => setDifficulty(null)}>RESTART ANALYSIS</Button>
-            </div>
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center p-12 bg-black/40 rounded-xl border border-primary/20 backdrop-blur-md"
+            >
+                <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+                <h2 className="text-3xl font-bold text-white mb-2">CALCULATION COMPLETE</h2>
+                <p className="text-muted-foreground mb-6">Probability assessment pathways fully established.</p>
+                <div className="text-sm font-mono text-primary animate-pulse">INITIATING NEXT PHASE...</div>
+            </motion.div>
         );
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
-            <div className="flex justify-between items-end px-4">
+        <div className="w-full max-w-2xl mx-auto p-2 bg-black/40 rounded-xl border border-white/10 backdrop-blur-md relative overflow-hidden">
+            {/* HUD Header */}
+            <div className="flex justify-between items-end px-4 mb-12 border-b border-white/5 pb-4">
                 <div className="space-y-2">
-                    <p className="text-xs font-mono text-primary uppercase tracking-[0.4em]">Risk Layer: {difficulty}</p>
+                    <p className="text-xs font-mono text-primary uppercase tracking-[0.4em]">Protocol: Probability_Assessment</p>
                     <div className="flex gap-1.5">
                         {levels.map((_, i) => (
                             <div key={i} className={cn("h-1.5 rounded-full transition-all duration-500", i < currentIdx ? "bg-primary w-4" : i === currentIdx ? "bg-primary w-12 shadow-[0_0_10px_rgba(var(--primary),0.5)]" : "bg-white/5 w-4")} />
                         ))}
                     </div>
                 </div>
-                <Button variant="ghost" onClick={() => setDifficulty(null)} className="text-[10px] font-mono opacity-40">Abort</Button>
+                <div className="text-right">
+                    <span className="text-[10px] font-mono text-muted-foreground uppercase opacity-50">Accuracy</span>
+                    <div className="text-lg font-bold text-white">{Math.round((currentIdx / levels.length) * 100)}%</div>
+                </div>
             </div>
 
-            <motion.div
-                key={currentIdx + (feedback === "ERROR" ? "-err" : "")}
-                initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
-                className="bg-black/20 border-2 border-white/10 rounded-[50px] p-6 min-h-[320px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
-            >
-                {feedback === "ERROR" ? (
-                    <div className="flex flex-col items-center text-center max-w-2xl py-10">
-                        <h2 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter">Variance Detected ❌</h2>
-                        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-10 w-full text-left">
-                            <p className="text-lg text-white/80 mb-6 font-medium">🧐 {level.explanation}</p>
-                            <div className="flex justify-between items-center p-4 bg-green-500/10 border border-green-500/20 rounded-2xl">
-                                <span className="text-xs font-mono text-green-500/60 uppercase">Optimal Probability</span>
-                                <span className="text-4xl font-black text-green-500 font-mono">{level.correctAnswer}</span>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentIdx}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="min-h-[450px] flex flex-col items-center justify-center"
+                >
+                    {feedback === "ERROR" ? (
+                        <div className="flex flex-col items-center text-center max-w-2xl py-10">
+                            <motion.div
+                                initial={{ scale: 0.9 }}
+                                animate={{ scale: 1 }}
+                                className="bg-red-500/10 p-4 rounded-full mb-4 border border-red-500/20"
+                            >
+                                <XCircle className="w-16 h-16 text-red-500" />
+                            </motion.div>
+                            <h2 className="text-3xl font-black text-white mb-6 uppercase tracking-tighter">Variance Detected</h2>
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 mb-10 w-full text-left">
+                                <p className="text-lg text-white/80 mb-6 font-medium">💡 {level.explanation}</p>
+                                <div className="flex justify-between items-center p-4 bg-green-500/10 border border-green-500/20 rounded-2xl">
+                                    <span className="text-xs font-mono text-green-500/60 uppercase">Correct Answer</span>
+                                    <span className="text-3xl font-black text-green-500 font-mono">{level.correctAnswer}</span>
+                                </div>
+                            </div>
+                            <div className="flex gap-4">
+                                <Button onClick={() => setFeedback(null)} size="lg" variant="outline" className="rounded-full px-10">
+                                    Retry
+                                </Button>
+                                <Button onClick={nextLevel} size="lg" className="rounded-full px-10 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">
+                                    Next Question
+                                </Button>
                             </div>
                         </div>
-                        <div className="flex gap-4">
-                            <Button onClick={() => setFeedback(null)} size="lg" variant="outline" className="rounded-full px-10">Retry Assessment</Button>
-                            <Button onClick={nextLevel} size="lg" className="rounded-full px-10 bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">Next Layer</Button>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="w-full space-y-6">
-                        <div className="flex flex-col items-center gap-6">
-                            {/* Dynamic Visualization Chamber */}
-                            <div className="flex gap-8 p-12 bg-white/5 rounded-[40px] border border-white/10 backdrop-blur-md relative min-h-[200px] items-center justify-center w-full max-w-2xl mx-auto">
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary/20 border border-primary/40 rounded-full text-[10px] font-mono text-primary uppercase tracking-widest font-black">
-                                    {level.visualType || 'BIT'} CHAMBER
-                                </div>
+                    ) : (
+                        <div className="w-full space-y-6">
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-center mb-8"
+                            >
+                                <motion.h3 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="text-2xl font-bold text-white uppercase tracking-tighter mb-2"
+                                >
+                                    {level.title}
+                                </motion.h3>
+                                <motion.p 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="text-muted-foreground text-sm font-mono opacity-60"
+                                >
+                                    Analyze the scenario and calculate the probability.
+                                </motion.p>
+                            </motion.div>
 
-                                {(!level.visualType || level.visualType === 'BITS') && (
-                                    <div className="flex gap-4 flex-wrap justify-center">
-                                        {level.bits.map((bit, idx) => (
-                                            <div key={idx} className="flex gap-2">
-                                                {Array.from({ length: bit.count }).map((_, bIdx) => (
-                                                    <motion.div
-                                                        key={bIdx}
-                                                        initial={{ scale: 0, rotate: -45 }} animate={{ scale: 1, rotate: 0 }}
-                                                        transition={{ type: "spring", stiffness: 200, delay: bIdx * 0.05 }}
-                                                        className={cn(
-                                                            "w-12 h-12 rounded-full border-4 shadow-xl",
-                                                            bit.type === 'GREEN' ? "bg-green-500/20 border-green-500 shadow-green-500/20" :
-                                                                bit.type === 'RED' ? "bg-red-500/20 border-red-500 shadow-red-500/20" :
-                                                                    "bg-blue-500/20 border-blue-500 shadow-blue-500/20"
-                                                        )}
-                                                    />
+                            <div className="w-full">
+                                <div className="flex flex-col items-center gap-6">
+                                    {/* Dynamic Visualization Chamber */}
+                                    <div className="flex gap-8 p-12 bg-white/5 rounded-[40px] border border-white/10 backdrop-blur-md relative min-h-[200px] items-center justify-center w-full max-w-2xl mx-auto">
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary/20 border border-primary/40 rounded-full text-[10px] font-mono text-primary uppercase tracking-widest font-black">
+                                            {level.visualType || 'BIT'} CHAMBER
+                                        </div>
+
+                                        {(!level.visualType || level.visualType === 'BITS') && (
+                                            <div className="flex gap-4 flex-wrap justify-center">
+                                                {level.bits.map((bit, idx) => (
+                                                    <div key={idx} className="flex gap-2">
+                                                        {Array.from({ length: bit.count }).map((_, bIdx) => (
+                                                            <motion.div
+                                                                key={bIdx}
+                                                                initial={{ scale: 0, rotate: -45 }}
+                                                                animate={{ scale: 1, rotate: 0 }}
+                                                                transition={{ type: "spring", stiffness: 200, delay: bIdx * 0.05 }}
+                                                                className={cn(
+                                                                    "w-12 h-12 rounded-full border-4 shadow-xl",
+                                                                    bit.type === 'GREEN' ? "bg-green-500/20 border-green-500 shadow-green-500/20" :
+                                                                        bit.type === 'RED' ? "bg-red-500/20 border-red-500 shadow-red-500/20" :
+                                                                            "bg-blue-500/20 border-blue-500 shadow-blue-500/20"
+                                                                )}
+                                                            />
+                                                        ))}
+                                                    </div>
                                                 ))}
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        )}
 
-                                {level.visualType === 'DICE' && (
-                                    <div className="flex gap-12">
-                                        {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
-                                            <motion.div
-                                                key={idx}
-                                                animate={{ rotate: [0, 90, 180, 270, 360], y: [0, -20, 0] }}
-                                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                                                className="w-24 h-24 bg-white/10 border-4 border-white/20 rounded-3xl flex items-center justify-center text-5xl shadow-2xl"
-                                            >
-                                                🎲
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                )}
+                                        {level.visualType === 'DICE' && (
+                                            <div className="flex gap-12">
+                                                {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
+                                                    <motion.div
+                                                        key={idx}
+                                                        animate={{ rotate: [0, 90, 180, 270, 360], y: [0, -20, 0] }}
+                                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                                        className="w-24 h-24 bg-white/10 border-4 border-white/20 rounded-3xl flex items-center justify-center text-5xl shadow-2xl"
+                                                    >
+                                                        🎲
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        )}
 
-                                {level.visualType === 'COINS' && (
-                                    <div className="flex gap-12">
-                                        {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
-                                            <motion.div
-                                                key={idx}
-                                                animate={{ rotateY: [0, 180, 360] }}
-                                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                                className="w-24 h-24 bg-yellow-500/20 border-4 border-yellow-500 rounded-full flex items-center justify-center text-4xl shadow-[0_0_30px_rgba(234,179,8,0.3)]"
-                                            >
-                                                🪙
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                )}
+                                        {level.visualType === 'COINS' && (
+                                            <div className="flex gap-12">
+                                                {Array.from({ length: level.visualData?.count || 1 }).map((_, idx) => (
+                                                    <motion.div
+                                                        key={idx}
+                                                        animate={{ rotateY: [0, 180, 360] }}
+                                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                                        className="w-24 h-24 bg-yellow-500/20 border-4 border-yellow-500 rounded-full flex items-center justify-center text-4xl shadow-[0_0_30px_rgba(234,179,8,0.3)]"
+                                                    >
+                                                        🪙
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        )}
 
-                                {level.visualType === 'CARDS' && (
-                                    <div className="flex gap-4 relative pl-8 min-h-[220px]">
-                                        <CardShuffleDeck />
+                                        {level.visualType === 'CARDS' && (
+                                            <div className="flex gap-4 relative pl-8 min-h-[220px]">
+                                                <CardShuffleDeck />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
 
-                            <div className="text-center max-w-3xl">
-                                <div className="max-h-32 overflow-y-auto flex items-center justify-center">
-                                    <h3 className="text-4xl font-black text-white leading-tight mb-8 tracking-tight">{level.question}</h3>
+                                    <div className="text-center max-w-3xl mt-8">
+                                        <div className="flex items-center justify-center">
+                                            <h3 className="text-2xl font-black text-white leading-tight mb-8 tracking-tight">{level.question}</h3>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex gap-6 justify-center">
-                                    <div className="px-6 py-3 bg-white/5 rounded-full border border-white/10 text-xs font-mono text-white/60 uppercase tracking-widest flex items-center gap-3">
-                                        <Brain className="w-4 h-4 text-primary" /> Logic Density: High
-                                    </div>
-                                    <div className="px-6 py-3 bg-white/5 rounded-full border border-white/10 text-xs font-mono text-white/60 uppercase tracking-widest flex items-center gap-3">
-                                        <Target className="w-4 h-4 text-primary" /> Resolution Req
-                                    </div>
+
+                                <div className="flex flex-wrap justify-center gap-6 pt-6">
+                                    {level.options.map((opt, i) => (
+                                        <motion.button
+                                            key={i}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.5 + i * 0.1, type: "spring" }}
+                                            whileHover={{ y: -4, scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => handleCheck(opt)}
+                                            className={cn(
+                                                "px-10 py-6 rounded-3xl border-2 transition-all font-mono text-2xl font-black min-w-[140px]",
+                                                selected === opt
+                                                    ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_30px_rgba(34,197,94,0.5)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.5)]")
+                                                    : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:text-primary shadow-lg"
+                                            )}
+                                        >
+                                            {opt}
+                                        </motion.button>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-
-                        <div className="flex flex-wrap justify-center gap-8 pt-6">
-                            {level.options.map((opt, i) => (
-                                <motion.button
-                                    key={i} whileHover={{ y: -8, scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                                    onClick={() => handleCheck(opt)}
-                                    className={cn(
-                                        "px-14 py-10 rounded-[40px] border-4 transition-all font-mono text-4xl font-black",
-                                        selected === opt
-                                            ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_50px_rgba(34,197,94,0.5)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_50px_rgba(239,68,68,0.5)]")
-                                            : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:text-primary shadow-lg"
-                                    )}
-                                >
-                                    {opt}
-                                </motion.button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </motion.div>
+                    )}
+                </motion.div>
+            </AnimatePresence>
 
             <AnimatePresence>
                 {feedback === "SUCCESS" && (
-                    <motion.div initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} className="flex flex-col items-center gap-6">
-                        <p className="text-primary font-mono text-sm tracking-[0.4em] uppercase font-bold animate-pulse">Neural Assessment Sync ✅</p>
-                        <Button onClick={nextLevel} size="xl" className="rounded-full px-20 py-10 text-2xl font-black bg-primary hover:bg-primary/90 shadow-[0_20px_60px_rgba(var(--primary),0.3)] group">
-                            NEXT QUESTION 🚀 <ArrowRight className="ml-6 w-8 h-8 group-hover:translate-x-3 transition-transform" />
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        className="flex flex-col items-center gap-6 mt-8"
+                    >
+                        <div className="flex flex-col items-center">
+                            <div className="bg-primary/20 p-4 rounded-full mb-4">
+                                <Zap className="w-12 h-12 text-primary" />
+                            </div>
+                            <p className="text-primary font-mono text-sm tracking-[0.4em] uppercase font-bold animate-pulse">Assessment Complete ✅</p>
+                        </div>
+                        <Button onClick={nextLevel} size="lg" className="rounded-full px-16 py-8 text-xl font-black bg-primary hover:bg-primary/90 shadow-[0_20px_60px_rgba(var(--primary),0.3)] group">
+                            NEXT QUESTION <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-3 transition-transform" />
                         </Button>
                     </motion.div>
                 )}

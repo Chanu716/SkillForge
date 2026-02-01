@@ -263,21 +263,26 @@ export default function AptitudeBridge({ onComplete, category }: { onComplete: (
     };
 
     if (!difficulty) {
-        // (Keep existing Difficulty Selection UI)
         return (
-            <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+            <div className="w-full max-w-4xl mx-auto py-20 px-6">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-                    <div className="inline-block p-4 rounded-3xl bg-secondary/10 border border-secondary/20 mb-6">
-                        <Brain className="w-12 h-12 text-primary animate-pulse" />
-                    </div>
-                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">
-                        {category ? category.replace('_', ' ') : 'APTITUDE'} PROTOCOL
-                    </h1>
-                    <p className="text-primary/60 font-mono tracking-widest uppercase text-sm">Synchronize neural logic parameters.</p>
+                    <Brain className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
+                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">APTITUDE BRIDGE</h1>
+                    <p className="text-primary/60 font-mono tracking-widest uppercase">Select neural difficulty protocol for logical reasoning assessment.</p>
                 </motion.div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-6">
-                    {[{ id: "EASY", label: "NOVICE" }, { id: "MEDIUM", label: "EXPERT" }, { id: "HARD", label: "MASTER" }].map((d, i) => (
-                        <Button key={d.id} onClick={() => setDifficulty(d.id as Difficulty)} className="h-32 text-2xl font-black bg-white/5 border-2 border-white/10 hover:border-primary">{d.label}</Button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {["EASY", "MEDIUM", "HARD"].map((d, i) => (
+                        <motion.button
+                            key={d}
+                            whileHover={{ y: -10 }}
+                            onClick={() => setDifficulty(d as Difficulty)}
+                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all font-black text-2xl text-white"
+                        >
+                            {d === "EASY" ? <Shield className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             d === "MEDIUM" ? <Zap className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             <Flame className="w-12 h-12 mx-auto mb-6 text-primary" />}
+                            {d === "EASY" ? "NOVICE" : d === "MEDIUM" ? "EXPERT" : "MASTER"}
+                        </motion.button>
                     ))}
                 </div>
             </div>

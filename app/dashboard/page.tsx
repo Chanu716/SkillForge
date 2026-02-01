@@ -6,6 +6,7 @@ import { Brain, Code2, Database, Cpu, Terminal, Lock, ChevronRight, Settings } f
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import AnimatedBackground from "@/components/landing/AnimatedBackground";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -27,7 +28,9 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="min-h-screen p-8 md:p-12 overflow-y-auto">
+        <div className="min-h-screen p-8 md:p-12 overflow-y-auto relative overflow-hidden">
+            <AnimatedBackground imageSrc="/backgrounds/dashboard.png" />
+            <div className="relative z-10">
             <header className="flex justify-between items-end mb-12 border-b border-white/10 pb-6">
                 <div>
                     <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-1">
@@ -146,6 +149,7 @@ export default function DashboardPage() {
                     </div>
                 </section>
             </motion.div>
+            </div>
         </div>
     );
 }

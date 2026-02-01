@@ -135,19 +135,21 @@ export default function GenericSimulator({ topicId, topicTitle, onComplete }: Ge
             <div className="w-full max-w-4xl mx-auto py-20 px-6">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
                     <Terminal className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
-                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter uppercase">{topicTitle}</h1>
-                    <p className="text-primary/60 font-mono tracking-widest uppercase">Select authorization level to begin synchronization.</p>
+                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">{topicTitle.toUpperCase()}</h1>
+                    <p className="text-primary/60 font-mono tracking-widest uppercase">Select knowledge assessment difficulty.</p>
                 </motion.div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {["EASY", "MEDIUM", "HARD"].map((d, i) => (
                         <motion.button
                             key={d}
-                            whileHover={{ y: -10, scale: 1.05 }}
+                            whileHover={{ y: -10 }}
                             onClick={() => setDifficulty(d as Difficulty)}
-                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all group"
+                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all font-black text-2xl text-white"
                         >
-                            <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">{i === 0 ? "⚡" : i === 1 ? "🛡️" : "🔥"}</div>
-                            <h3 className="text-2xl font-black text-white tracking-widest">{d}</h3>
+                            {d === "EASY" ? <Shield className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             d === "MEDIUM" ? <Zap className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             <Flame className="w-12 h-12 mx-auto mb-6 text-primary" />}
+                            {d === "EASY" ? "NOVICE" : d === "MEDIUM" ? "EXPERT" : "MASTER"}
                         </motion.button>
                     ))}
                 </div>

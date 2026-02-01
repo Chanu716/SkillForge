@@ -145,9 +145,9 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
         return (
             <div className="w-full max-w-4xl mx-auto py-20 px-6">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-                    <Clock className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
-                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">TEMPORAL LOGIC</h1>
-                    <p className="text-primary/60 font-mono tracking-widest uppercase">Master the geometry of time and the cycles of the galactic calendar.</p>
+                    <Activity className="w-16 h-16 text-primary mx-auto mb-6 animate-pulse" />
+                    <h1 className="text-6xl font-black text-white mb-4 tracking-tighter">TEMPORAL ANALYSIS</h1>
+                    <p className="text-primary/60 font-mono tracking-widest uppercase">Master time calculations and calendar logic.</p>
                 </motion.div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {["EASY", "MEDIUM", "HARD"].map((d, i) => (
@@ -155,10 +155,12 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                             key={d}
                             whileHover={{ y: -10 }}
                             onClick={() => setDifficulty(d as Difficulty)}
-                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all"
+                            className="p-10 rounded-[40px] border-2 border-white/5 bg-white/5 hover:border-primary/50 transition-all font-black text-2xl text-white"
                         >
-                            <Calendar className="w-12 h-12 mx-auto mb-6 text-primary" />
-                            <h3 className="text-2xl font-black text-white">{d}</h3>
+                            {d === "EASY" ? <Clock className="w-12 h-12 mx-auto mb-6 text-primary" /> : 
+                             d === "MEDIUM" ? <Calendar className="w-12 h-12 mx-auto mb-6 text-primary" /> :
+                             <Timer className="w-12 h-12 mx-auto mb-6 text-primary" />}
+                            {d === "EASY" ? "NOVICE" : d === "MEDIUM" ? "EXPERT" : "MASTER"}
                         </motion.button>
                     ))}
                 </div>
@@ -166,7 +168,20 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
         );
     }
 
-    if (isFinished) return <div className="text-center p-20 text-white">SYNC COMPLETE</div>;
+    if (isFinished) {
+        return (
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center p-12 bg-black/40 rounded-xl border border-primary/20 backdrop-blur-md"
+            >
+                <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+                <h2 className="text-3xl font-bold text-white mb-2">TEMPORAL SYNC COMPLETE</h2>
+                <p className="text-muted-foreground mb-6">Time mastery pathways fully established.</p>
+                <div className="text-sm font-mono text-primary animate-pulse">INITIATING NEXT PHASE...</div>
+            </motion.div>
+        );
+    }
 
     return (
         <div className="w-full max-w-3xl mx-auto flex flex-col gap-4">
@@ -200,15 +215,8 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                         </div>
                     </div>
                 </div>
-                <Button 
-                    variant="ghost" 
-                    onClick={() => setDifficulty(null)} 
-                    className="text-[10px] font-mono opacity-40 hover:opacity-100 mt-2 tracking-widest"
-                >
-                    ABORT_TASK
-                </Button>
             </div>
-            <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-3 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-sm">
+            <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-3 min-h-45 flex flex-col items-center justify-center relative backdrop-blur-sm">
                 {feedback === "ERROR" ? (
                     <div className="flex flex-col items-center text-center p-10">
                         <h2 className="text-4xl font-black text-red-500 mb-6 uppercase tracking-tighter">Temporal Desync ❌</h2>
@@ -225,78 +233,132 @@ export default function ClockCalendarSimulator({ onComplete }: { onComplete: (sc
                         </div>
 
                         {/* Animated Visual Area */}
-                        <div className="flex justify-center py-2">
+                        <div className="flex justify-center py-4">
                             {level.type === 'CLOCK' ? (
                                 <motion.div 
-                                    initial={{ rotate: -90, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    className="relative w-64 h-64 rounded-full border-8 border-white/10 bg-black/40 shadow-[0_0_50px_rgba(var(--primary),0.2)]"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: "spring", stiffness: 200 }}
+                                    className="relative w-72 h-72 rounded-full border-8 border-white/20 bg-gradient-to-br from-black/60 to-black/40 shadow-[0_0_60px_rgba(var(--primary),0.3)]"
                                 >
                                     {/* Clock Face Markings */}
                                     {[...Array(12)].map((_, i) => (
-                                        <div key={i} className="absolute inset-0 flex justify-center py-2" style={{ transform: `rotate(${i * 30}deg)` }}>
-                                            <div className="w-1 h-3 bg-white/20 rounded-full" />
+                                        <div key={i} className="absolute inset-0 flex justify-center py-3" style={{ transform: `rotate(${i * 30}deg)` }}>
+                                            <motion.div 
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                transition={{ delay: i * 0.05 }}
+                                                className={cn("rounded-full", i % 3 === 0 ? "w-2 h-4 bg-primary/60" : "w-1 h-3 bg-white/30")} 
+                                            />
                                         </div>
                                     ))}
                                     
                                     {/* Hour Hand */}
                                     <motion.div 
-                                        initial={{ rotate: 0 }}
+                                        initial={{ rotate: -180 }}
                                         animate={{ rotate: (parseInt(level.question.match(/\d+/g)?.[0] || "0") % 12) * 30 + (parseInt(level.question.match(/\d+/g)?.[1] || "0") * 0.5) }}
-                                        transition={{ duration: 1.5, ease: "easeOut" }}
-                                        className="absolute top-1/2 left-1/2 w-1.5 h-16 bg-white/80 rounded-full origin-bottom -translate-x-1/2 -translate-y-full"
+                                        transition={{ duration: 2, type: "spring", stiffness: 50, damping: 10 }}
+                                        className="absolute top-1/2 left-1/2 w-2 h-20 bg-gradient-to-t from-white to-white/60 rounded-full origin-bottom -translate-x-1/2 -translate-y-full shadow-lg"
                                     />
                                     
                                     {/* Minute Hand */}
                                     <motion.div 
-                                        initial={{ rotate: 0 }}
+                                        initial={{ rotate: -180 }}
                                         animate={{ rotate: parseInt(level.question.match(/\d+/g)?.[1] || "0") * 6 }}
-                                        transition={{ duration: 2, ease: "easeOut" }}
-                                        className="absolute top-1/2 left-1/2 w-1 h-24 bg-primary shadow-[0_0_15px_rgba(var(--primary),0.5)] rounded-full origin-bottom -translate-x-1/2 -translate-y-full"
+                                        transition={{ duration: 2.5, type: "spring", stiffness: 40, damping: 8 }}
+                                        className="absolute top-1/2 left-1/2 w-1.5 h-28 bg-primary shadow-[0_0_20px_rgba(var(--primary),0.6)] rounded-full origin-bottom -translate-x-1/2 -translate-y-full"
                                     />
                                     
-                                    {/* Center Node */}
-                                    <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 border-2 border-primary" />
+                                    {/* Center Node with pulse */}
+                                    <motion.div 
+                                        animate={{ scale: [1, 1.1, 1] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="absolute top-1/2 left-1/2 w-5 h-5 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 border-3 border-primary shadow-[0_0_15px_rgba(var(--primary),0.5)]"
+                                    />
                                 </motion.div>
                             ) : (
                                 <motion.div 
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    className="relative w-64 h-72 bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col items-center justify-center p-8"
+                                    initial={{ y: 30, opacity: 0, rotateX: 20 }}
+                                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                                    transition={{ type: "spring", stiffness: 200 }}
+                                    className="relative w-80 h-80 bg-gradient-to-br from-white to-gray-50 rounded-3xl overflow-hidden shadow-2xl"
+                                    style={{ perspective: "1000px" }}
                                 >
-                                    <div className="absolute top-0 left-0 right-0 h-16 bg-red-600 flex items-center justify-center">
-                                        <div className="flex gap-4">
-                                            <div className="w-3 h-6 bg-black/20 rounded-full" />
-                                            <div className="w-3 h-6 bg-black/20 rounded-full" />
+                                    {/* Calendar Header */}
+                                    <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-between px-6 shadow-lg">
+                                        <motion.div 
+                                            animate={{ rotate: [0, 10, 0] }}
+                                            transition={{ duration: 3, repeat: Infinity }}
+                                            className="w-4 h-8 bg-black/20 rounded-full" 
+                                        />
+                                        <Calendar className="w-8 h-8 text-white/80" />
+                                        <motion.div 
+                                            animate={{ rotate: [0, -10, 0] }}
+                                            transition={{ duration: 3, delay: 0.5, repeat: Infinity }}
+                                            className="w-4 h-8 bg-black/20 rounded-full" 
+                                        />
+                                    </div>
+                                    
+                                    {/* Calendar Grid */}
+                                    <div className="absolute top-24 left-0 right-0 bottom-0 p-4">
+                                        <div className="grid grid-cols-7 gap-1 mb-2">
+                                            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                                                <div key={i} className="text-xs font-bold text-gray-400 text-center">{day}</div>
+                                            ))}
+                                        </div>
+                                        <div className="grid grid-cols-7 gap-1">
+                                            {[...Array(35)].map((_, i) => (
+                                                <motion.div 
+                                                    key={i}
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{ delay: i * 0.02 }}
+                                                    className={cn(
+                                                        "aspect-square flex items-center justify-center rounded-lg text-xs font-semibold",
+                                                        i === 15 ? "bg-red-500 text-white shadow-lg" : "bg-gray-100 text-gray-700"
+                                                    )}
+                                                >
+                                                    {i + 1}
+                                                </motion.div>
+                                            ))}
                                         </div>
                                     </div>
+                                    
+                                    {/* Animated Indicator */}
                                     <motion.div 
-                                        animate={{ x: [0, -5, 5, 0] }}
-                                        transition={{ duration: 4, repeat: Infinity }}
-                                        className="text-center"
+                                        animate={{ opacity: [0.5, 1, 0.5] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-red-500 text-white text-xs font-mono rounded-full shadow-lg"
                                     >
-                                        <p className="text-red-500 font-black text-xl mb-2 uppercase tracking-widest">{level.question.match(/[A-Z][a-z]+/)?.[0]}</p>
-                                        <span className="text-8xl font-black text-slate-800 leading-none">?</span>
+                                        {level.question.match(/[A-Z][a-z]+/)?.[0] || "DAY"}
                                     </motion.div>
-                                    <div className="absolute bottom-6 flex gap-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <div key={i} className="w-8 h-2 bg-slate-100 rounded-full" />
-                                        ))}
-                                    </div>
                                 </motion.div>
                             )}
                         </div>
 
-                        <h3 className="text-2xl font-bold text-white max-w-2xl mx-auto leading-tight">{level.question}</h3>
-                        <div className="grid grid-cols-2 gap-3 pt-3">
+                        <motion.h3 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="text-2xl font-bold text-white max-w-2xl mx-auto leading-tight px-4"
+                        >
+                            {level.question}
+                        </motion.h3>
+                        <div className="grid grid-cols-2 gap-4 pt-6 px-4">
                             {level.options.map((opt, i) => (
                                 <motion.button
-                                    key={i} onClick={() => handleCheck(opt)}
+                                    key={i} 
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.4 + i * 0.1 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => handleCheck(opt)}
                                     className={cn(
-                                        "p-10 rounded-3xl border-2 transition-all font-mono text-2xl font-bold", 
+                                        "p-8 rounded-3xl border-2 transition-all font-mono text-xl font-bold shadow-lg", 
                                         selected === opt 
                                             ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_40px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]")
-                                            : "border-white/10 bg-white/5 text-white/80"
+                                            : "border-white/10 bg-white/5 text-white/80 hover:border-primary/50 hover:bg-primary/5"
                                     )}
                                 >
                                     {opt}

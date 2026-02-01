@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useGameStore } from "@/store/gameStore";
 import { User, UserPlus, Ghost } from "lucide-react";
+import AnimatedBackground from "@/components/landing/AnimatedBackground";
 
 export default function AuthSelectionPage() {
     const router = useRouter();
@@ -32,10 +33,8 @@ export default function AuthSelectionPage() {
 
     return (
         <main className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px] pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black via-background/90 to-background pointer-events-none" />
-
+            <AnimatedBackground imageSrc="/backgrounds/bg.png" />
+            
             <div className="relative z-10 w-full max-w-4xl text-center">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
