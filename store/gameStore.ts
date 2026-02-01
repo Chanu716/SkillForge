@@ -93,14 +93,10 @@ export const useGameStore = create<GameState>()(
           description: 'Hone the engine of your mind.',
           progress: 0,
           topics: [
-            { id: 'apt-logic', title: 'Logical Reasoning', description: 'The Bridge Pattern', isUnlocked: true, isCompleted: false, moduleId: 'apt-logic-1' },
+            { id: 'apt-logic', title: 'Logical Reasoning', description: 'Combined Reasoning Challenge', isUnlocked: true, isCompleted: false, moduleId: 'apt-logic-1' },
             { id: 'apt-prob', title: 'Probability', description: 'Risk Assessment', isUnlocked: true, isCompleted: false, moduleId: 'apt-prob-1' },
             { id: 'apt-clocks', title: 'Clocks & Calendars', description: 'Temporal Logic', isUnlocked: true, isCompleted: false, moduleId: 'apt-clocks-1' },
             { id: 'apt-blood', title: 'Blood Relations', description: 'Lineage Mapping', isUnlocked: true, isCompleted: false, moduleId: 'apt-blood-1' },
-            { id: 'apt-seat', title: 'Seating Arrangement', description: 'Spatial Organization', isUnlocked: true, isCompleted: false, moduleId: 'apt-seat-1' },
-            { id: 'apt-code', title: 'Coding-Decoding', description: 'Pattern Decryption', isUnlocked: true, isCompleted: false, moduleId: 'apt-code-1' },
-            { id: 'apt-syl', title: 'Syllogisms', description: 'Deductive Logic', isUnlocked: true, isCompleted: false, moduleId: 'apt-syl-1' },
-            { id: 'apt-puzz', title: 'Logic Puzzles', description: 'Complex Reasoning', isUnlocked: true, isCompleted: false, moduleId: 'apt-puzz-1' },
           ]
         },
         {
@@ -353,16 +349,16 @@ export const useGameStore = create<GameState>()(
               // Keep the most recent progress by comparing completion status
               const currentState = get();
               const backendProgress = data.progress;
-              
+
               // Merge subjects - keep completed topics from either state
               const mergedSubjects = currentState.subjects.map((subject, idx) => {
                 const backendSubject = backendProgress.subjects?.[idx];
                 if (!backendSubject) return subject;
-                
+
                 const mergedTopics = subject.topics.map((topic, topicIdx) => {
                   const backendTopic = backendSubject.topics?.[topicIdx];
                   if (!backendTopic) return topic;
-                  
+
                   // If either local or backend shows completed, keep it completed
                   return {
                     ...topic,
@@ -370,43 +366,43 @@ export const useGameStore = create<GameState>()(
                     isUnlocked: topic.isUnlocked || backendTopic.isUnlocked,
                   };
                 });
-                
+
                 const completedCount = mergedTopics.filter(t => t.isCompleted).length;
                 const progress = (completedCount / mergedTopics.length) * 100;
-                
+
                 return {
                   ...subject,
                   topics: mergedTopics,
                   progress,
                 };
               });
-              
+
               // Merge projects - keep unlocked levels from either state
               const mergedProjects = currentState.projects.map((project, idx) => {
                 const backendProject = backendProgress.projects?.[idx];
                 if (!backendProject) return project;
-                
+
                 const mergedLevels = project.levels.map((level, levelIdx) => {
                   const backendLevel = backendProject.levels?.[levelIdx];
                   if (!backendLevel) return level;
-                  
+
                   return {
                     ...level,
                     isLocked: level.isLocked && backendLevel.isLocked, // Unlock if either is unlocked
                     isCompleted: level.isCompleted || backendLevel.isCompleted,
                   };
                 });
-                
+
                 return {
                   ...project,
                   levels: mergedLevels,
                 };
               });
-              
+
               // Use the higher XP value
               const mergedXP = Math.max(currentState.xp, backendProgress.xp || 0);
               const mergedLevel = Math.max(currentState.level, backendProgress.level || 1);
-              
+
               set({
                 subjects: mergedSubjects,
                 projects: mergedProjects,
@@ -422,7 +418,7 @@ export const useGameStore = create<GameState>()(
       }
     }),
     {
-      name: 'skillforge-storage-v5', // Using the new version key from teammates
+      name: 'skillforge-storage-v6', // Reset to remove deleted sections
     }
   )
 );
