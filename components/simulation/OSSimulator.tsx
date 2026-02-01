@@ -255,7 +255,7 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
             </div>
 
             {/* Main Stage */}
-                <div className="bg-black/40 border-2 border-white/5 rounded-[60px] p-4 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-3xl overflow-hidden shadow-2xl">
+            <div className="bg-black/40 border-2 border-white/5 rounded-[40px] p-6 flex flex-col items-center justify-between relative backdrop-blur-3xl overflow-hidden shadow-2xl">
                 <AnimatePresence mode="wait">
                     {feedback === "ERROR" ? (
                         <motion.div 
@@ -263,14 +263,14 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="flex flex-col items-center text-center p-4 max-w-2xl"
+                            className="flex flex-col items-center text-center p-6 max-w-2xl w-full"
                         >
-                            <XCircle className="w-16 h-16 text-red-500 mb-4 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.3)]" />
-                            <h2 className="text-3xl font-black text-red-500 mb-4 uppercase tracking-tighter italic">Instruction Trap</h2>
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-[40px] p-4 mb-4 backdrop-blur-xl">
+                            <XCircle className="w-20 h-20 text-red-500 mb-6 animate-pulse shadow-[0_0_40px_rgba(239,68,68,0.3)]" />
+                            <h2 className="text-4xl font-black text-red-500 mb-6 uppercase tracking-tighter italic">Instruction Trap</h2>
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-[30px] p-6 mb-8 backdrop-blur-xl max-h-32 overflow-y-auto">
                                 <p className="text-lg text-white/90 font-medium italic leading-relaxed">🧐 {level.explanation}</p>
                             </div>
-                            <Button onClick={nextLevel} size="xl" className="rounded-full px-20 h-20 text-xl font-black bg-red-600 hover:bg-red-500 shadow-[0_20px_40px_rgba(239,68,68,0.3)] transition-all uppercase italic">Reset State</Button>
+                            <Button onClick={nextLevel} size="lg" className="rounded-full px-24 py-6 text-xl font-black bg-red-600 hover:bg-red-500 shadow-[0_20px_60px_rgba(239,68,68,0.3)] transition-all uppercase italic">Reset State →</Button>
                         </motion.div>
                     ) : (
                         <motion.div 
@@ -278,10 +278,10 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="w-full flex flex-col items-center gap-14"
+                            className="w-full flex flex-col items-center gap-8"
                         >
                             {/* Visual Feedback Engine */}
-                            <div className="relative w-full max-w-2xl bg-black/60 rounded-3xl border-4 border-white/5 flex items-center justify-center p-6 overflow-hidden shadow-inner">
+                            <div className="relative w-full max-w-2xl h-[240px] bg-black/60 rounded-3xl border-2 border-white/10 flex items-center justify-center p-6 overflow-hidden shadow-inner">
                                 <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center">
                                     <Cpu className="w-48 h-48 text-primary" />
                                 </div>
@@ -395,19 +395,19 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                                 )}
                             </div>
 
-                            <div className="space-y-8 w-full max-w-2xl px-6">
-                                <h3 className="text-4xl font-black text-white text-center leading-tight italic tracking-tighter">
+                            <div className="space-y-4 w-full max-w-2xl px-4">
+                                <h3 className="text-xl font-black text-white text-center leading-tight italic tracking-tight">
                                     {level.question}
                                 </h3>
-                                <div className="grid grid-cols-2 gap-6 pt-6">
+                                <div className="grid grid-cols-2 gap-4">
                                     {level.options.map((opt, i) => (
                                         <motion.button
                                             key={i}
-                                            whileHover={{ scale: 1.05, y: -5, x: i % 2 === 0 ? -5 : 5 }}
+                                            whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => handleCheck(opt)}
                                             className={cn(
-                                                "p-4 rounded-[40px] border-2 transition-all font-black text-lg uppercase tracking-tighter italic min-h-[80px] flex items-center justify-center text-center",
+                                                "p-4 rounded-[25px] border-2 transition-all font-black text-base uppercase tracking-tight italic min-h-[70px] flex items-center justify-center text-center",
                                                 selected === opt 
                                                     ? (opt === level.correctAnswer ? "border-primary bg-primary/20 text-primary shadow-[0_0_50px_rgba(var(--primary),0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_50px_rgba(239,68,68,0.4)]")
                                                     : "border-white/5 bg-white/5 text-white/70 hover:border-primary/40 hover:bg-primary/5 hover:text-white"
@@ -427,26 +427,26 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
             <AnimatePresence>
                 {feedback === "SUCCESS" && (
                     <motion.div 
-                        initial={{ opacity: 0, y: 100 }} 
+                        initial={{ opacity: 0, y: 30 }} 
                         animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -100 }}
-                        className="flex flex-col items-center gap-10 py-12"
+                        exit={{ opacity: 0, y: -30 }}
+                        className="flex flex-col items-center gap-6 py-8"
                     >
                         <motion.div 
-                            animate={{ rotateY: 360 }} 
+                            animate={{ scale: [1, 1.15, 1], rotateY: 360 }} 
                             transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-                            className="bg-primary/20 p-10 rounded-full border-4 border-primary shadow-[0_0_120px_rgba(var(--primary),0.4)]"
+                            className="bg-primary/20 p-6 rounded-full border-4 border-primary shadow-[0_0_80px_rgba(var(--primary),0.4)]"
                         >
-                            <CheckCircle2 className="w-24 h-24 text-primary" />
+                            <CheckCircle2 className="w-16 h-16 text-primary" />
                         </motion.div>
                         <div className="text-center space-y-2">
-                             <p className="text-5xl font-black text-primary uppercase tracking-[0.5em] italic animate-pulse">Segment Verified</p>
-                             <p className="text-xs font-mono text-white/30 uppercase tracking-[0.8em]">Kernel State: Optimized</p>
+                             <p className="text-3xl font-black text-primary uppercase tracking-wider italic animate-pulse">Segment Verified</p>
+                             <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.5em]">Kernel State: Optimized</p>
                         </div>
                         <Button 
                             onClick={nextLevel} 
-                            size="xl" 
-                            className="bg-primary hover:bg-primary/80 text-white px-36 py-14 rounded-full text-4xl font-black shadow-[0_40px_100px_rgba(var(--primary),0.5)] transition-all uppercase italic tracking-tighter group overflow-hidden"
+                            size="lg" 
+                            className="bg-primary hover:bg-primary/80 text-white px-24 py-8 rounded-full text-2xl font-black shadow-[0_20px_60px_rgba(var(--primary),0.5)] transition-all uppercase italic tracking-tight group overflow-hidden"
                         >
                             <span className="relative z-10">CONTINUE_EXEC 🚀</span>
                         </Button>
