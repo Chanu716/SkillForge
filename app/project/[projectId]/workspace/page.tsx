@@ -2,7 +2,7 @@
 
 import { useGameStore } from "@/store/gameStore";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Play, CheckCircle2, Save, Terminal as TerminalIcon, Database, Layout } from "lucide-react";
+import { ArrowLeft, Play, CheckCircle2, Save, Terminal as TerminalIcon, Database, Layout, Cpu, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, use } from "react";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,7 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ pro
             },
             OS: {
                 accent: "from-green-600 via-green-400 to-green-900",
-                icon: Globe,
+                icon: Cpu,
                 card: "border-green-400/30 hover:border-green-400/60 shadow-green-400/20",
             },
             CODE: {

@@ -9,7 +9,7 @@ export async function GET() {
     if (!session || !session.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const userId = session.user.id as string;
+    const userId = (session.user as any).id || session.user.email;
     const progress = await loadProgress(userId);
     return NextResponse.json({ progress });
   } catch (error) {
