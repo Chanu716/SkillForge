@@ -263,7 +263,7 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
             <motion.div
                 key={currentIdx + (feedback === "ERROR" ? "-err" : "")}
                 initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
-                className="bg-black/20 border-2 border-white/10 rounded-[50px] p-16 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
+                className="bg-black/20 border-2 border-white/10 rounded-[50px] p-6 min-h-[320px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
             >
                 {feedback === "ERROR" ? (
                     <div className="flex flex-col items-center text-center max-w-2xl py-10">
@@ -281,8 +281,8 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full space-y-12">
-                        <div className="flex flex-col items-center gap-12">
+                    <div className="w-full space-y-6">
+                        <div className="flex flex-col items-center gap-6">
                             {/* Dynamic Visualization Chamber */}
                             <div className="flex gap-8 p-12 bg-white/5 rounded-[40px] border border-white/10 backdrop-blur-md relative min-h-[200px] items-center justify-center w-full max-w-2xl mx-auto">
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-primary/20 border border-primary/40 rounded-full text-[10px] font-mono text-primary uppercase tracking-widest font-black">
@@ -349,7 +349,9 @@ export default function ProbabilitySimulator({ onComplete }: { onComplete: (scor
                             </div>
 
                             <div className="text-center max-w-3xl">
-                                <h3 className="text-4xl font-black text-white leading-tight mb-8 tracking-tight">{level.question}</h3>
+                                <div className="max-h-32 overflow-y-auto flex items-center justify-center">
+                                    <h3 className="text-4xl font-black text-white leading-tight mb-8 tracking-tight">{level.question}</h3>
+                                </div>
                                 <div className="flex gap-6 justify-center">
                                     <div className="px-6 py-3 bg-white/5 rounded-full border border-white/10 text-xs font-mono text-white/60 uppercase tracking-widest flex items-center gap-3">
                                         <Brain className="w-4 h-4 text-primary" /> Logic Density: High

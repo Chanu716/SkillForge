@@ -29,7 +29,31 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ pro
         setTimeout(() => {
             const success = Math.random() > 0.3; // Simulating pass/fail
             if (success) {
+        // Subject theme utility (reuse from subject page)
+        const subjectThemes = {
+            DBMS: {
+                accent: "from-blue-600 via-blue-400 to-blue-900",
+                icon: Database,
+                card: "border-blue-400/30 hover:border-blue-400/60 shadow-blue-400/20",
+            },
+            OS: {
+                accent: "from-green-600 via-green-400 to-green-900",
+                icon: Globe,
+                card: "border-green-400/30 hover:border-green-400/60 shadow-green-400/20",
+            },
+            CODE: {
+                accent: "from-orange-600 via-orange-400 to-orange-900",
+                icon: Code,
+                card: "border-orange-400/30 hover:border-orange-400/60 shadow-orange-400/20",
+            },
+        };
                 setOutput(prev => [...prev, '✓ TESTS PASSED', '> Deploying to staging...']);
+        // Determine theme by project id prefix
+        const themeKey = project.id.toUpperCase().includes('DB') ? 'DBMS'
+            : project.id.toUpperCase().includes('FE') ? 'OS'
+            : 'CODE';
+        const theme = subjectThemes[themeKey];
+        const Icon = theme.icon;
                 // Mark complete? Note: store doesn't have simple 'completeLevel' yet, we reused unlockProjectLevel maybe? 
                 // Actually we need a completeLevel action.
                 // For now, let's just simulate output.
@@ -88,7 +112,9 @@ export default function ProjectWorkspacePage({ params }: { params: Promise<{ pro
                 <div className="flex-1 flex flex-col">
                     <div className="flex-1 bg-[#1e1e1e] p-8 font-mono text-sm text-gray-300 pointer-events-none opacity-80">
                         {/* Placeholder Editor Content */}
-                        <p className="text-gray-500">// {level.description}</p>
+                        <div className="max-h-24 overflow-y-auto">
+                            <p className="text-gray-500">// {level.description}</p>
+                        </div>
                         <p className="text-blue-400">CREATE TABLE</p> <span className="text-yellow-300">Users</span> (
                         <div className="pl-4">
                             id <span className="text-blue-400">SERIAL PRIMARY KEY</span>,<br />

@@ -29,7 +29,9 @@ export default function SubjectPage({ params }: { params: Promise<{ subjectId: s
                 </Button>
                 <div>
                     <h1 className="text-3xl font-bold font-display text-white">{subject.title}</h1>
-                    <p className="text-muted-foreground">{subject.description}</p>
+                    <div className="max-h-32 overflow-y-auto">
+                        <p className="text-muted-foreground">{subject.description}</p>
+                    </div>
                 </div>
             </header>
 
@@ -74,7 +76,9 @@ function TopicCard({ topic, index }: { topic: Topic, index: number }) {
                     <h3 className={cn("text-lg font-bold transition-colors", topic.isUnlocked ? "text-white" : "text-muted-foreground")}>
                         {topic.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">{topic.description}</p>
+                    <div className="max-h-24 overflow-y-auto">
+                        <p className="text-sm text-muted-foreground">{topic.description}</p>
+                    </div>
                 </div>
             </div>
 

@@ -149,7 +149,7 @@ export default function TimeWorkSimulator({ onComplete }: { onComplete: (score: 
             <motion.div 
                 key={currentIdx + (feedback === "ERROR" ? "-err" : "")}
                 initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
-                className="bg-white/[0.03] border-2 border-white/10 rounded-[50px] p-16 min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
+                    className="bg-white/[0.03] border-2 border-white/10 rounded-[50px] p-6 min-h-[320px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
             >
                 {feedback === "ERROR" ? (
                     <div className="flex flex-col items-center text-center max-w-2xl py-10">

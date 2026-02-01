@@ -5,75 +5,8 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Trophy, ArrowRight, Zap, Shield, Flame, Users, Network, GitPullRequest, Info, XCircle, Heart, Activity } from "lucide-react";
-import Image from "next/image";
 
 type Difficulty = "EASY" | "MEDIUM" | "HARD" | null;
-
-interface FamilyNode {
-    id: string;
-    role: string;
-    avatar: "father" | "mother" | "boy" | "girl";
-    children?: FamilyNode[];
-    partner?: FamilyNode;
-    highlight?: boolean;
-}
-
-const DynamicFamilyTree = ({ node }: { node: FamilyNode }) => {
-    return (
-        <div className="flex flex-col items-center">
-            <div className="flex flex-col items-center z-10 relative group">
-                <motion.div
-                    initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className={cn(
-                        "w-16 h-16 rounded-full border-2 overflow-hidden relative shadow-[0_0_15px_rgba(255,255,255,0.1)] bg-black transition-all",
-                        node.highlight ? "border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.4)]" : "border-red-500/50"
-                    )}
-                >
-                    <Image
-                        src={`/avatars/${node.avatar}.png`}
-                        alt={node.role}
-                        fill
-                        className="object-cover"
-                    />
-                </motion.div>
-                <span className={cn(
-                    "text-xs mt-1 px-2 py-0.5 rounded-full border backdrop-blur-md",
-                    node.highlight
-                        ? "text-green-400 border-green-500/30 bg-green-900/20 font-bold"
-                        : "text-white/60 border-white/10 bg-black/20"
-                )}>
-                    {node.role}
-                </span>
-                {node.partner && (
-                    <div className="absolute left-[100%] top-1/2 -translate-y-1/2 flex items-center">
-                        <div className="w-8 h-0.5 bg-white/20" />
-                        <DynamicFamilyTree node={node.partner} />
-                    </div>
-                )}
-            </div>
-
-            {node.children && node.children.length > 0 && (
-                <div className="flex flex-col items-center">
-                    <div className="h-6 w-0.5 bg-white/20" />
-                    <div className="flex gap-8 relative">
-                        {/* Horizontal connector line for multiple children */}
-                        {node.children.length > 1 && (
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[calc(100%-4rem)] h-0.5 bg-white/20" />
-                        )}
-                        {node.children.map((child, i) => (
-                            <div key={child.id} className="flex flex-col items-center relative">
-                                {node.children!.length > 1 && <div className="h-4 w-0.5 bg-white/20 absolute -top-0.5" />}
-                                <div className={node.children!.length > 1 ? "mt-4" : ""}>
-                                    <DynamicFamilyTree node={child} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-};
 
 interface Level {
     id: number;
@@ -82,85 +15,18 @@ interface Level {
     options: string[];
     correctAnswer: string;
     explanation: string;
-    tree?: FamilyNode; // Optional dynamic tree for this question
 }
 
 const GENERATE_LEVELS = (diff: Difficulty): Level[] => {
     if (!diff) return [];
-
+    
     const EASY_POOL = [
-        {
-            q: "His father is my father's only son.",
-            a: "His Son",
-            ex: "'My father's only son' is the speaker. Thus, speaker is person's father.",
-            opts: ["His Son", "His Father", "Himself", "His Brother"],
-            tree: {
-                id: "root", role: "My Father", avatar: "father",
-                children: [{
-                    id: "me", role: "Me (Only Son)", avatar: "boy", highlight: true,
-                    children: [{ id: "him", role: "Him (His Son)", avatar: "boy" }]
-                }]
-            }
-        },
-        {
-            q: "Pointing to a man, a woman says: 'He is the son of my father's only daughter'.",
-            a: "Her Son",
-            ex: "'My father's only daughter' is the woman herself. He is her son.",
-            opts: ["Her Son", "Her Husband", "Her Brother", "Her Father"],
-            tree: {
-                id: "root", role: "My Father", avatar: "father",
-                children: [{
-                    id: "me", role: "Me (Woman)", avatar: "mother",
-                    children: [{ id: "him", role: "Him (Man)", avatar: "boy", highlight: true }]
-                }]
-            }
-        },
-        {
-            q: "A woman says: 'This man's wife is my mother's only daughter'.",
-            a: "Himself",
-            ex: "'My mother's only daughter' is the woman. She is the man's wife.",
-            opts: ["Her Husband", "Her Brother", "Her Son", "Her Father"],
-            tree: {
-                id: "root", role: "My Mother", avatar: "mother",
-                children: [{
-                    id: "me", role: "Me (Daughter)", avatar: "girl",
-                    partner: { id: "husband", role: "Man (Husband)", avatar: "father", highlight: true }
-                }]
-            }
-        },
-        {
-            q: "Pointing to a boy, a girl said, 'He is the son of the daughter of the father of my uncle.'",
-            a: "Brother/Cousin",
-            ex: "Father of uncle is grandfather. Daughter of grandfather is aunt/mother.",
-            opts: ["Brother/Cousin", "Son", "Father", "Uncle"],
-            tree: {
-                id: "root", role: "Grandfather", avatar: "father",
-                children: [
-                    { id: "uncle", role: "My Uncle", avatar: "boy" },
-                    {
-                        id: "mom", role: "Mother/Aunt", avatar: "mother",
-                        children: [
-                            { id: "me", role: "Me (Girl)", avatar: "girl" },
-                            { id: "him", role: "Him (Boy)", avatar: "boy", highlight: true }
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            q: "Introducing a man, a woman said, 'His wife is the only daughter of my father'.",
-            a: "Her Husband",
-            ex: "'Only daughter of my father' is the woman. She is the man's wife.",
-            opts: ["Her Husband", "Her Brother", "Her Father", "Her Son"],
-            tree: {
-                id: "root", role: "My Father", avatar: "father",
-                children: [{
-                    id: "me", role: "Me (Only Daughter)", avatar: "girl",
-                    partner: { id: "him", role: "Him (Husband)", avatar: "boy", highlight: true }
-                }]
-            }
-        },
-        { q: "Pointing to a man, a boy said, 'He is the father of my mother's only daughter'.", a: "Father", ex: "Mother's only daughter is the boy's sister. Her father is the boy's father.", opts: ["Father", "Uncle", "Brother", "Grandfather"], tree: { id: "root", role: "My Father", avatar: "father", highlight: true, partner: { id: "mom", role: "My Mother", avatar: "mother" }, children: [{ id: "me", role: "Me (Boy)", avatar: "boy" }, { id: "sis", role: "Sister", avatar: "girl" }] } },
+        { q: "His father is my father's only son.", a: "His Son", ex: "'My father's only son' is the speaker. Thus, speaker is person's father.", opts: ["His Son", "His Father", "Himself", "His Brother"] },
+        { q: "Pointing to a man, a woman says: 'He is the son of my father's only daughter'.", a: "Her Son", ex: "'My father's only daughter' is the woman herself. He is her son.", opts: ["Her Son", "Her Husband", "Her Brother", "Her Father"] },
+        { q: "A woman says: 'This man's wife is my mother's only daughter'.", a: "Himself", ex: "'My mother's only daughter' is the woman. She is the man's wife.", opts: ["Her Husband", "Her Brother", "Her Son", "Her Father"] },
+        { q: "Pointing to a boy, a girl said, 'He is the son of the daughter of the father of my uncle.'", a: "Brother/Cousin", ex: "Father of uncle is grandfather. Daughter of grandfather is aunt/mother. Her son is brother/cousin.", opts: ["Brother/Cousin", "Son", "Father", "Uncle"] },
+        { q: "Introducing a man, a woman said, 'His wife is the only daughter of my father'.", a: "Her Husband", ex: "'Only daughter of my father' is the woman. She is the man's wife.", opts: ["Her Husband", "Her Brother", "Her Father", "Her Son"] },
+        { q: "Pointing to a man, a boy said, 'He is the father of my mother's only daughter'.", a: "Father", ex: "Mother's only daughter is the boy's sister. Her father is the boy's father.", opts: ["Father", "Uncle", "Brother", "Grandfather"] },
         { q: "A says to B, 'You are the son of my grandfather's only son'.", a: "Brother", ex: "Grandfather's only son is A's father. His son is A's brother.", opts: ["Brother", "Cousin", "Uncle", "Nephew"] },
         { q: "Pointing to a woman, a man says, 'She is the mother-in-law of my only son's wife'.", a: "His Wife", ex: "Son's wife's mother-in-law is the man's wife.", opts: ["His Wife", "His Mother", "His Sister", "His Daughter"] },
         { q: "How is my mother's sister's only sibling related to me?", a: "Mother", ex: "Mother's sister's only sibling is the mother herself.", opts: ["Mother", "Aunt", "Grandmother", "Cousin"] },
@@ -209,20 +75,16 @@ const GENERATE_LEVELS = (diff: Difficulty): Level[] => {
     ];
 
     const pool = diff === "EASY" ? EASY_POOL : diff === "MEDIUM" ? MEDIUM_POOL : HARD_POOL;
-
+    
     return Array.from({ length: 15 }, (_, i) => {
         const data = pool[i];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const treeBase = (data as any).tree;
-
         return {
             id: i + 1,
             title: `Neural Link ${i + 1}`,
             question: data.q,
             options: data.opts,
             correctAnswer: data.a,
-            explanation: data.ex,
-            tree: treeBase as FamilyNode | undefined
+            explanation: data.ex
         };
     });
 };
@@ -283,7 +145,7 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
     if (isFinished) return <div className="text-center p-20 text-white">LINEAGE RESOLVED</div>;
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col gap-8 text-red-500">
+        <div className="w-full max-w-3xl mx-auto flex flex-col gap-4 text-red-500">
             <div className="flex justify-between items-start px-4 mb-4">
                 <div className="flex items-center gap-6">
                     <div className="w-16 h-16 rounded-2xl border-2 border-red-500/30 bg-red-500/10 flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.2)]">
@@ -295,13 +157,13 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
                             <span className="text-xl font-black text-white uppercase tracking-[0.2em]">{difficulty}</span>
                         </div>
                         <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.4em]">Active Neural Link</p>
-
+                        
                         <div className="flex gap-2 pt-4">
                             {levels.map((_, i) => (
-                                <motion.div
+                                <motion.div 
                                     key={i}
                                     initial={false}
-                                    animate={{
+                                    animate={{ 
                                         backgroundColor: i <= currentIdx ? "rgba(34, 197, 94, 1)" : "rgba(255, 255, 255, 0.1)",
                                         width: i === currentIdx ? 48 : 24
                                     }}
@@ -314,15 +176,15 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
                         </div>
                     </div>
                 </div>
-                <Button
-                    variant="ghost"
-                    onClick={() => setDifficulty(null)}
+                <Button 
+                    variant="ghost" 
+                    onClick={() => setDifficulty(null)} 
                     className="text-[10px] font-mono text-red-500 opacity-40 hover:opacity-100 mt-2 tracking-widest hover:bg-red-500/10"
                 >
                     ABORT_TASK
                 </Button>
             </div>
-            <div className="bg-white/[0.02] border-2 border-white/10 rounded-[50px] p-16 min-h-[500px] flex flex-col items-center justify-center relative backdrop-blur-md">
+            <div className="bg-white/[0.02] border-2 border-white/10 rounded-[30px] p-3 min-h-[140px] flex flex-col items-center justify-center relative backdrop-blur-md">
                 {feedback === "ERROR" ? (
                     <div className="flex flex-col items-center text-center py-10">
                         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-8xl mb-8">❌</motion.div>
@@ -335,31 +197,72 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
                         <Button onClick={nextLevel} size="xl" className="rounded-full px-16 h-20 text-xl">Understood</Button>
                     </div>
                 ) : (
-                    <div className="w-full text-center space-y-12">
+                    <div className="w-full text-center space-y-6">
                         <div className="inline-flex items-center gap-4 px-8 py-3 bg-red-500/10 rounded-full border border-red-500/20 text-red-500 font-mono text-xs uppercase tracking-[0.3em]">
                             <GitPullRequest className="w-4 h-4" />
                             Kinship Protocol: Processing
                         </div>
 
                         {/* Animated Kinship Network */}
-                        {/* Family Tree Visualization */}
-                        <div className="relative min-h-[300px] w-full flex flex-col items-center justify-start py-8">
-                            {level.tree ? (
-                                <DynamicFamilyTree node={level.tree} />
-                            ) : (
-                                <div className="text-white/40 italic">Visualizing lineage data...</div>
-                            )}
+                        <div className="relative h-64 w-full flex items-center justify-center overflow-hidden">
+                            <motion.div 
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0 opacity-10"
+                            >
+                                <div className="absolute inset-0 border-[1px] border-dashed border-red-500 rounded-full scale-50" />
+                                <div className="absolute inset-0 border-[1px] border-dashed border-red-500 rounded-full scale-75" />
+                                <div className="absolute inset-0 border-[1px] border-dashed border-red-500 rounded-full scale-110" />
+                            </motion.div>
+
+                            <div className="relative flex items-center gap-16">
+                                {/* Subject A */}
+                                <motion.div 
+                                    animate={{ 
+                                        y: [0, -15, 0],
+                                        boxShadow: ["0 0 20px rgba(239, 68, 68, 0.2)", "0 0 50px rgba(239, 68, 68, 0.5)", "0 0 20px rgba(239, 68, 68, 0.2)"]
+                                    }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                    className="w-24 h-24 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center backdrop-blur-md"
+                                >
+                                    <Users className="w-10 h-10 text-red-500" />
+                                </motion.div>
+
+                                {/* Connecting Line */}
+                                <div className="w-32 h-1 bg-gradient-to-r from-red-500 via-transparent to-red-500 relative">
+                                    <motion.div 
+                                        animate={{ left: ["0%", "100%"], opacity: [0, 1, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-red-400 rounded-full blur-md"
+                                    />
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 bg-black text-[8px] font-mono text-red-500 border border-red-500/30 rounded-full uppercase">
+                                        LINKING
+                                    </div>
+                                </div>
+
+                                {/* Subject B */}
+                                <motion.div 
+                                    animate={{ 
+                                        y: [0, 15, 0],
+                                        boxShadow: ["0 0 20px rgba(239, 68, 68, 0.2)", "0 0 50px rgba(239, 68, 68, 0.5)", "0 0 20px rgba(239, 68, 68, 0.2)"]
+                                    }}
+                                    transition={{ duration: 4, delay: 1, repeat: Infinity }}
+                                    className="w-24 h-24 rounded-full bg-red-500/10 border-2 border-red-500/40 flex items-center justify-center backdrop-blur-md"
+                                >
+                                    <Heart className="w-10 h-10 text-red-500/60" />
+                                </motion.div>
+                            </div>
                         </div>
 
-                        <h3 className="text-3xl font-bold text-white max-w-4xl mx-auto leading-relaxed">{level.question}</h3>
-                        <div className="grid grid-cols-2 gap-8 pt-6 px-20">
+                        <h3 className="text-xl font-bold text-white max-w-2xl mx-auto leading-relaxed">{level.question}</h3>
+                        <div className="grid grid-cols-2 gap-2 pt-2 px-2">
                             {level.options.map((opt, i) => (
                                 <motion.button
                                     key={i} onClick={() => handleCheck(opt)}
                                     className={cn(
-                                        "p-10 rounded-[35px] border-2 transition-all font-black text-2xl",
-                                        selected === opt
-                                            ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_40px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]")
+                                        "p-4 rounded-xl border-2 transition-all font-bold text-base", 
+                                        selected === opt 
+                                            ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)]")
                                             : "border-white/10 bg-white/5 text-white/80 hover:border-red-500/30"
                                     )}
                                 >
@@ -372,13 +275,13 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
             </div>
             <AnimatePresence>
                 {feedback === "SUCCESS" && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.5 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
                         className="flex flex-col items-center gap-8 py-10"
                     >
-                        <motion.div
-                            animate={{ y: [0, -20, 0] }}
+                        <motion.div 
+                            animate={{ y: [0, -20, 0] }} 
                             transition={{ repeat: Infinity, duration: 2 }}
                             className="text-[120px] leading-none mb-4"
                         >
@@ -387,9 +290,9 @@ export default function BloodRelationSimulator({ onComplete }: { onComplete: (sc
                         <p className="text-4xl font-black text-green-500 uppercase tracking-[0.5em] animate-pulse">
                             LINK CRYSTALLIZED
                         </p>
-                        <Button
-                            onClick={nextLevel}
-                            size="xl"
+                        <Button 
+                            onClick={nextLevel} 
+                            size="xl" 
                             className="bg-red-600 hover:bg-red-500 text-white px-32 py-12 rounded-full text-3xl font-black shadow-[0_30px_80px_rgba(220,38,38,0.4)] group transition-all"
                         >
                             NEXT QUESTION 🚀

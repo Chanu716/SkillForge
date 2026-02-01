@@ -37,7 +37,9 @@ export default function ProjectOverviewPage({ params }: { params: Promise<{ proj
             </div>
             <div>
               <h1 className="text-4xl font-bold font-display text-white">{project.title}</h1>
-              <p className="text-muted-foreground text-lg">{project.description}</p>
+              <div className="max-h-32 overflow-y-auto">
+                <p className="text-muted-foreground text-lg">{project.description}</p>
+              </div>
             </div>
           </div>
 
@@ -94,7 +96,9 @@ function LevelNode({ level, index, requirements, onStart }: { level: ProjectLeve
             Phase {index + 1}: {level.title}
             {level.isCompleted && <CheckCircle2 className="w-5 h-5 text-green-500" />}
           </h3>
-          <p className="text-sm text-muted-foreground mb-4">{level.description}</p>
+          <div className="max-h-24 overflow-y-auto mb-2">
+            <p className="text-sm text-muted-foreground mb-4">{level.description}</p>
+          </div>
 
           {level.isLocked && requirements.length > 0 && (
             <div className="flex gap-2 text-xs items-center p-2 bg-red-500/10 text-red-400 rounded w-fit">

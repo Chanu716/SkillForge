@@ -255,7 +255,7 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
             </div>
 
             {/* Main Stage */}
-            <div className="bg-black/40 border-2 border-white/5 rounded-[60px] p-12 min-h-[580px] flex flex-col items-center justify-center relative backdrop-blur-3xl overflow-hidden shadow-2xl">
+                <div className="bg-black/40 border-2 border-white/5 rounded-[60px] p-4 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-3xl overflow-hidden shadow-2xl">
                 <AnimatePresence mode="wait">
                     {feedback === "ERROR" ? (
                         <motion.div 
@@ -263,12 +263,12 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="flex flex-col items-center text-center p-10 max-w-2xl"
+                            className="flex flex-col items-center text-center p-4 max-w-2xl"
                         >
-                            <XCircle className="w-24 h-24 text-red-500 mb-8 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.3)]" />
-                            <h2 className="text-5xl font-black text-red-500 mb-6 uppercase tracking-tighter italic">Instruction Trap</h2>
-                            <div className="bg-red-500/10 border border-red-500/20 rounded-[40px] p-10 mb-10 backdrop-blur-xl">
-                                <p className="text-2xl text-white/90 font-medium italic leading-relaxed">🧐 {level.explanation}</p>
+                            <XCircle className="w-16 h-16 text-red-500 mb-4 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.3)]" />
+                            <h2 className="text-3xl font-black text-red-500 mb-4 uppercase tracking-tighter italic">Instruction Trap</h2>
+                            <div className="bg-red-500/10 border border-red-500/20 rounded-[40px] p-4 mb-4 backdrop-blur-xl">
+                                <p className="text-lg text-white/90 font-medium italic leading-relaxed">🧐 {level.explanation}</p>
                             </div>
                             <Button onClick={nextLevel} size="xl" className="rounded-full px-20 h-20 text-xl font-black bg-red-600 hover:bg-red-500 shadow-[0_20px_40px_rgba(239,68,68,0.3)] transition-all uppercase italic">Reset State</Button>
                         </motion.div>
@@ -281,82 +281,82 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                             className="w-full flex flex-col items-center gap-14"
                         >
                             {/* Visual Feedback Engine */}
-                            <div className="relative w-full max-w-3xl aspect-video bg-black/60 rounded-[50px] border-4 border-white/5 flex items-center justify-center p-12 overflow-hidden shadow-inner">
+                            <div className="relative w-full max-w-2xl bg-black/60 rounded-3xl border-4 border-white/5 flex items-center justify-center p-6 overflow-hidden shadow-inner">
                                 <div className="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center">
-                                    <Cpu className="w-96 h-96 text-primary" />
+                                    <Cpu className="w-48 h-48 text-primary" />
                                 </div>
 
                                 {level.type === 'PROC' && (
-                                    <div className="flex flex-col items-center gap-10 w-full">
-                                        <div className="flex items-center gap-8">
+                                    <div className="flex flex-col items-center gap-6 w-full">
+                                        <div className="flex items-center gap-4">
                                             <div className={cn(
-                                                "w-32 h-32 rounded-3xl border-4 flex flex-col items-center justify-center transition-all duration-700",
-                                                level.visualData.state === "READY" ? "border-primary bg-primary/20 shadow-[0_0_40px_rgba(var(--primary),0.3)]" : "border-white/10 opacity-40"
+                                                "w-20 h-20 rounded-2xl border-3 flex flex-col items-center justify-center transition-all duration-700",
+                                                level.visualData.state === "READY" ? "border-primary bg-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.3)]" : "border-white/10 opacity-40"
                                             )}>
-                                                <Activity className="w-10 h-10 mb-2" />
-                                                <span className="text-xs font-black uppercase italic">READY</span>
+                                                <Activity className="w-6 h-6 mb-1" />
+                                                <span className="text-[10px] font-black uppercase italic">READY</span>
                                             </div>
-                                            <ArrowRight className="w-8 h-8 opacity-20" />
+                                            <ArrowRight className="w-5 h-5 opacity-20" />
                                             <div className={cn(
-                                                "w-40 h-40 rounded-full border-4 flex flex-col items-center justify-center transition-all duration-700 animate-pulse",
-                                                level.visualData.state === "RUNNING" ? "border-primary bg-primary/20 shadow-[0_0_60px_rgba(var(--primary),0.4)] scale-110" : "border-white/10 opacity-20"
+                                                "w-24 h-24 rounded-full border-3 flex flex-col items-center justify-center transition-all duration-700 animate-pulse",
+                                                level.visualData.state === "RUNNING" ? "border-primary bg-primary/20 shadow-[0_0_40px_rgba(var(--primary),0.4)] scale-110" : "border-white/10 opacity-20"
                                             )}>
-                                                <Cpu className="w-14 h-14 mb-2" />
-                                                <span className="text-sm font-black uppercase italic">RUNNING</span>
+                                                <Cpu className="w-8 h-8 mb-1" />
+                                                <span className="text-xs font-black uppercase italic">RUNNING</span>
                                             </div>
-                                            <ArrowRight className="w-8 h-8 opacity-20" />
+                                            <ArrowRight className="w-5 h-5 opacity-20" />
                                             <div className={cn(
-                                                "w-32 h-32 rounded-3xl border-4 flex flex-col items-center justify-center transition-all duration-700",
-                                                level.visualData.state === "BLOCKING" ? "border-red-500 bg-red-500/20 shadow-[0_0_40px_rgba(239,68,68,0.3)]" : "border-white/10 opacity-40"
+                                                "w-20 h-20 rounded-2xl border-3 flex flex-col items-center justify-center transition-all duration-700",
+                                                level.visualData.state === "BLOCKING" ? "border-red-500 bg-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.3)]" : "border-white/10 opacity-40"
                                             )}>
-                                                <Lock className="w-10 h-10 mb-2" />
-                                                <span className="text-xs font-black uppercase italic">WAITING</span>
+                                                <Lock className="w-6 h-6 mb-1" />
+                                                <span className="text-[10px] font-black uppercase italic">WAITING</span>
                                             </div>
                                         </div>
-                                        <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-full font-mono text-xs uppercase tracking-widest italic text-primary">
+                                        <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-widest italic text-primary">
                                             PCB_POINTER: 0x{Math.floor(Math.random() * 10000).toString(16)}
                                         </div>
                                     </div>
                                 )}
 
                                 {level.type === 'SCHED' && (
-                                    <div className="w-full h-full flex flex-col justify-center items-center gap-10">
-                                        <div className="w-full flex justify-between px-10 relative">
+                                    <div className="w-full flex flex-col justify-center items-center gap-6">
+                                        <div className="w-full flex justify-between px-6 relative">
                                             {[...Array(3)].map((_, i) => (
                                                 <motion.div 
                                                     key={i}
-                                                    initial={{ height: 40 }}
-                                                    animate={{ height: [40, 80, 40] }}
+                                                    initial={{ height: 30 }}
+                                                    animate={{ height: [30, 60, 30] }}
                                                     transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.2 }}
-                                                    className="w-16 bg-primary/40 rounded-t-2xl border-x-2 border-t-2 border-primary/60 flex items-center justify-center font-black text-xl italic"
+                                                    className="w-12 bg-primary/40 rounded-t-2xl border-x-2 border-t-2 border-primary/60 flex items-center justify-center font-black text-sm italic"
                                                 >
                                                     P{i+1}
                                                 </motion.div>
                                             ))}
                                             <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary/20" />
                                         </div>
-                                        <div className="flex items-center gap-6 p-8 bg-white/5 border border-white/10 rounded-3xl">
-                                            <Clock className="w-8 h-8 text-primary animate-spin-slow" />
+                                        <div className="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
+                                            <Clock className="w-6 h-6 text-primary animate-spin-slow" />
                                             <div>
                                                 <p className="text-[10px] font-mono text-white/40 uppercase">Scheduling Metric</p>
-                                                <p className="text-2xl font-black italic uppercase tracking-tighter">{level.visualData.algo} Strategy active</p>
+                                                <p className="text-lg font-black italic uppercase tracking-tighter">{level.visualData.algo} Strategy active</p>
                                             </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {level.type === 'DEAD' && (
-                                    <div className="relative w-72 h-72">
+                                    <div className="relative w-48 h-48">
                                         <motion.div 
                                             animate={{ rotate: 360 }}
                                             transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
                                             className="absolute inset-0 border-4 border-dashed border-red-500/20 rounded-full"
                                         />
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="grid grid-cols-2 gap-12">
+                                            <div className="grid grid-cols-2 gap-6">
                                                 {[1, 2, 3, 4].map(i => (
-                                                    <div key={i} className="w-16 h-16 rounded-xl border-2 border-red-500/40 bg-red-500/10 flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.2)]">
-                                                        <Shield className="w-6 h-6 text-red-500" />
+                                                    <div key={i} className="w-12 h-12 rounded-xl border-2 border-red-500/40 bg-red-500/10 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                                                        <Shield className="w-5 h-5 text-red-500" />
                                                     </div>
                                                 ))}
                                             </div>
@@ -366,30 +366,30 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                                             transition={{ repeat: Infinity, duration: 2 }}
                                             className="absolute inset-0 flex items-center justify-center"
                                         >
-                                            <XCircle className="w-24 h-24 text-red-500 opacity-20" />
+                                            <XCircle className="w-16 h-16 text-red-500 opacity-20" />
                                         </motion.div>
                                     </div>
                                 )}
 
                                 {level.type === 'FILES' && (
-                                    <div className="w-full flex flex-col items-center gap-8">
-                                        <div className="flex gap-4">
+                                    <div className="w-full flex flex-col items-center gap-4">
+                                        <div className="flex gap-3">
                                             {[...Array(4)].map((_, i) => (
                                                 <motion.div 
                                                     key={i}
                                                     whileHover={{ y: -5, scale: 1.1 }}
-                                                    className="w-16 h-20 bg-primary/10 border-2 border-primary/30 rounded-lg flex items-center justify-center shadow-lg group pointer-events-auto"
+                                                    className="w-12 h-14 bg-primary/10 border-2 border-primary/30 rounded-lg flex items-center justify-center shadow-lg group pointer-events-auto"
                                                 >
-                                                    <Files className="w-6 h-6 text-primary group-hover:scale-125 transition-transform" />
+                                                    <Files className="w-5 h-5 text-primary group-hover:scale-125 transition-transform" />
                                                 </motion.div>
                                             ))}
                                         </div>
-                                        <div className="p-8 bg-black/40 border border-white/10 rounded-3xl w-80 text-center">
-                                            <div className="flex items-center justify-center gap-3 mb-4">
-                                                <FolderTree className="w-5 h-5 text-primary" />
+                                        <div className="p-4 bg-black/40 border border-white/10 rounded-2xl w-64 text-center">
+                                            <div className="flex items-center justify-center gap-2 mb-2">
+                                                <FolderTree className="w-4 h-4 text-primary" />
                                                 <span className="text-[10px] font-mono tracking-widest uppercase opacity-40 italic font-bold">Filesystem Hierarchy</span>
                                             </div>
-                                            <p className="text-xl font-black italic tracking-tight uppercase">inode: {level.visualData.inode || "Root_Link"}</p>
+                                            <p className="text-base font-black italic tracking-tight uppercase">inode: {level.visualData.inode || "Root_Link"}</p>
                                         </div>
                                     </div>
                                 )}
@@ -407,7 +407,7 @@ export default function OSSimulator({ forcedType, onComplete }: { forcedType?: O
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => handleCheck(opt)}
                                             className={cn(
-                                                "p-10 rounded-[40px] border-2 transition-all font-black text-xl uppercase tracking-tighter italic min-h-[110px] flex items-center justify-center text-center", 
+                                                "p-4 rounded-[40px] border-2 transition-all font-black text-lg uppercase tracking-tighter italic min-h-[80px] flex items-center justify-center text-center",
                                                 selected === opt 
                                                     ? (opt === level.correctAnswer ? "border-primary bg-primary/20 text-primary shadow-[0_0_50px_rgba(var(--primary),0.4)]" : "border-red-500 bg-red-500/20 text-red-500 shadow-[0_0_50px_rgba(239,68,68,0.4)]")
                                                     : "border-white/5 bg-white/5 text-white/70 hover:border-primary/40 hover:bg-primary/5 hover:text-white"

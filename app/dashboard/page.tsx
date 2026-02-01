@@ -2,9 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useGameStore } from "@/store/gameStore";
-import { Brain, Code2, Database, Cpu, Terminal, Lock, ChevronRight } from "lucide-react";
+import { Brain, Code2, Database, Cpu, Terminal, Lock, ChevronRight, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -34,9 +35,14 @@ export default function DashboardPage() {
                     </h1>
                     <p className="text-muted-foreground text-sm">Welcome back, Developer.</p>
                 </div>
-                <div className="text-right">
-                    <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Current Level</div>
-                    <div className="text-2xl font-mono font-bold text-primary">LVL {level} <span className="text-sm text-muted-foreground font-normal">/ {xp} XP</span></div>
+                <div className="text-right flex items-center gap-4">
+                    <div className="text-xs text-muted-foreground uppercase tracking-widest text-right">
+                        <div className="mb-1">Current Level</div>
+                        <div className="text-2xl font-mono font-bold text-primary">LVL {level} <span className="text-sm text-muted-foreground font-normal">/ {xp} XP</span></div>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => router.push('/settings')} className="text-muted-foreground hover:text-white">
+                        <Settings className="w-6 h-6" />
+                    </Button>
                 </div>
             </header>
 
@@ -81,7 +87,9 @@ export default function DashboardPage() {
                                     <h3 className="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors flex items-center gap-2">
                                         {subject.title} <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </h3>
-                                    <p className="text-sm text-muted-foreground">{subject.description}</p>
+                                    <div className="max-h-24 overflow-y-auto">
+                                        <p className="text-sm text-muted-foreground">{subject.description}</p>
+                                    </div>
                                 </div>
 
                                 {/* Progress Bar */}
@@ -116,7 +124,9 @@ export default function DashboardPage() {
                             >
                                 <div className="relative z-10">
                                     <h3 className="text-lg font-bold text-white mb-1 group-hover:text-secondary transition-colors">{project.title}</h3>
-                                    <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                                    <div className="max-h-24 overflow-y-auto mb-2">
+                                        <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                                    </div>
 
                                     <div className="grid grid-cols-3 gap-2">
                                         {project.levels.map((lvl, i) => (

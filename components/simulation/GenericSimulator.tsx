@@ -158,8 +158,8 @@ export default function GenericSimulator({ topicId, topicTitle, onComplete }: Ge
     if (isFinished) return <div className="text-center p-20 text-white text-4xl font-black animate-pulse">SYNCHRONIZATION COMPLETE 🚀</div>;
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex flex-col gap-8">
-            <div className="bg-black/20 border-2 border-white/10 rounded-[60px] p-16 min-h-[550px] flex flex-col items-center justify-center relative backdrop-blur-md overflow-hidden">
+        <div className="w-full max-w-3xl mx-auto flex flex-col gap-4">
+            <div className="bg-black/20 border-2 border-white/10 rounded-[30px] p-4 min-h-[180px] flex flex-col items-center justify-center relative backdrop-blur-md overflow-hidden">
                 {feedback === "ERROR" ? (
                     <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center text-center">
                         <div className="text-[120px] mb-8">❌</div>
@@ -170,18 +170,18 @@ export default function GenericSimulator({ topicId, topicTitle, onComplete }: Ge
                         <Button onClick={nextLevel} size="xl" className="rounded-full px-20 py-10 text-2xl font-black bg-white/10 hover:bg-white/20 border-2 border-white/10">Understood</Button>
                     </motion.div>
                 ) : (
-                    <div className="w-full text-center space-y-12">
+                    <div className="w-full text-center space-y-6">
                         <div className="inline-flex items-center gap-4 px-8 py-3 bg-primary/10 rounded-full border border-primary/20 text-primary font-mono text-xs uppercase tracking-[0.3em] font-bold">
                             Processing Phase: {currentIdx + 1} / {levels.length}
                         </div>
-                        <h3 className="text-4xl font-bold text-white max-w-4xl mx-auto leading-tight">{level.question}</h3>
+                        <h3 className="text-2xl font-bold text-white max-w-2xl mx-auto leading-tight">{level.question}</h3>
                         
-                        <div className="grid grid-cols-2 gap-8 pt-10 px-10">
+                        <div className="grid grid-cols-2 gap-2 pt-2 px-2">
                             {level.options.map((opt, i) => (
                                 <motion.button
                                     key={i} onClick={() => handleCheck(opt)}
                                     className={cn(
-                                        "p-10 rounded-[35px] border-2 transition-all font-bold text-xl",
+                                        "p-4 rounded-xl border-2 transition-all font-bold text-base",
                                         selected === opt 
                                             ? (opt === level.correctAnswer ? "border-green-500 bg-green-500/20 text-green-500" : "border-red-500 bg-red-500/20 text-red-500")
                                             : "border-white/10 bg-white/5 text-white/80 hover:border-primary/40 hover:bg-primary/5"
